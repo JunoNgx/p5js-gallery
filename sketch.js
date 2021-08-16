@@ -4,21 +4,9 @@ let C = {width: null, height: null, mid: null};
 /** @type { Parallelogram [] } */
 let shapes;
 
-/** @typedef {{cooldown: number, pos: Vector, interval: number, base: number, height: number, speed: number}} Spawner */
+/** @typedef {{cooldown: number, pos: Vector, interval: number, base: number, height: number, speed: number, color: Color}} Spawner */
 /** @type { Spawner [] } */
 let spawners;
-
-const G = {
-    // SPEED_MIN: 0.5,
-    // SPEED_MAX: 1.5,
-    // BASE_MIN: 0.2,
-    // BASE_MAX: 0.5,
-    // HEIGHT_MIN: 0.4,
-    // HEIGHT_MAX: 0.8
-    BASE_1: C.width * 0.2,
-    HEIGHT_1: C.height * 0.4,
-    SPEED_1: 0.5
-}
 
 function setup() {
     C.width = windowWidth;
@@ -26,25 +14,19 @@ function setup() {
     C.mid = createVector(C.width*0.5, C.height*0.5);
 
     shapes = [];
-    // for (let i = 0; i < 5; i++) {
-    //     shapes.push({
-    //         pos: createVector(random(0, C.width), random(0, C.height)),
-    //         base: random(C.width * G.BASE_MIN, C.width * G.BASE_MAX),
-    //         height: random(C.height * G.HEIGHT_MIN, C.height * G.HEIGHT_MAX),
-    //         angle: PI/1.5,
-    //         speed: random(G.SPEED_MIN, G.SPEED_MAX)
-    //     });
-    // }
 
     spawners = [
         {
             pos: createVector(C.width * 0.3, C.height * -0.5),
             cooldown: 0,
-            interval: 145,
+            interval: 150,
             base: C.width * 0.14,
             height: C.height * 0.35,
             speed: C.height * 0.003,
-            isDown: true
+            isDown: true,
+            // color: color(32, 178, 170)
+            // color: color(143, 188, 139)
+            color: color(203, 235, 185)
         },
         {
             pos: createVector(C.width * -0.032, C.height * 1.2),
@@ -53,25 +35,30 @@ function setup() {
             base: C.width * 0.29,
             height: C.height * 0.47,
             speed: C.height * 0.005,
-            isDown: false
+            isDown: false,
+            // color: color(255, 20, 147)
+            color: color(255, 192, 203)
         },
         {
-            pos: createVector(C.width * 0.85, C.height * -0.8),
+            pos: createVector(C.width * 0.86, C.height * -0.8),
             cooldown: 0,
             interval: 420,
             base: C.width * 0.18,
             height: C.height * 0.64,
             speed: C.height * 0.002,
-            isDown: true
+            isDown: true,
+            color: color(255, 250, 205)
         },
         {
             pos: createVector(C.width * 0.4, C.height * 1.5),
             cooldown: 0,
             interval: 60,
-            base: C.width * 0.30,
+            base: C.width * 0.27,
             height: C.height * 0.17,
             speed: C.height * 0.004,
-            isDown: false
+            isDown: false,
+            // color: color(0, 191, 255)
+            color: color(166, 229, 245)
         },
     ];
 
@@ -79,8 +66,6 @@ function setup() {
 }
 
 function draw() {
-    // background(102, 205, 170);
-    // background(238, 238, 238);
     background(238);
 
     spawners.forEach(s => {
@@ -91,53 +76,31 @@ function draw() {
                 s.base,
                 s.height,
                 s.speed,
-                s.isDown
+                s.isDown,
+                s.color
             ));
             s.cooldown = s.interval;
         }
     });
-    // console.log(spawners.length);
-    // console.log(spawners[0].cooldown);
 
-    // color(44);
-    // rect(C.width*0.1, C.height*0.1, C.width*0.8, C.height*0.8);
     shapes.forEach((s) => {
-
-        // s.pos.y = (s.isDown)
-        // ? s.pos.y + s.speed*sin(s.angle)
-        // : s.pos.y - s.speed*sin(s.angle);
         s.pos.y += s.speed*sin(s.angle);
         s.pos.x += s.speed*cos(s.angle);
 
-        // let tl = createVector(s.pos.x - s.base/2, s.pos.y - s.height/2);
-        // let tr = createVector(s.pos.x + s.base/2, s.pos.y - s.height/2);
-        // let bl = createVector(s.pos.x - s.base/2, s.pos.y + s.height/2);
-        // let br = createVector(s.pos.x + s.base/2, s.pos.y + s.height/2);
         const tl = createVector(s.pos.x, s.pos.y);
         const tr = createVector(s.pos.x + s.base, s.pos.y);
         const bl = createVector(s.pos.x - s.height*tan(s.angle-HALF_PI), s.pos.y + s.height);
         const br = createVector(bl.x + s.base, s.pos.y + s.height);
 
-        fill(10);
+        fill(s.color);
         noStroke();
         quad(tl.x, tl.y, tr.x, tr.y, br.x, br.y, bl.x, bl.y);
-        
-        // color(255, 0, 0);
-        // circle(s.pos.x, s.pos.y, 10);
-
-        // if (s.pos.y > C.height) {
-        //     s.pos.x = random(C.width * 0.4, C.width*1.3);
-        //     s.pos.y = random(C.height * -0.5, C.height * -1.5);
-        //     s.base = random(C.width * G.BASE_MIN, C.width * G.BASE_MAX);
-        //     s.height = random(C.height * G.HEIGHT_MIN, C.height * G.HEIGHT_MAX);
-        //     s.speed = random(G.SPEED_MIN, G.SPEED_MAX);
-        // }
     });
+    
     shapes = shapes.filter(s =>
         C.height * -1.0 < s.pos.y
         && s.pos.y < C.height * 2.0
     );
-    // console.log(shapes);
 
     fill(238, 238, 238);
     textAlign(CENTER);
@@ -145,12 +108,13 @@ function draw() {
     text("Juno Nguyen", C.mid.x, C.mid.y);
 }
 
-function paral(_pos, _base, _height, _speed, _isDown) {
+function paral(_pos, _base, _height, _speed, _isDown, _color) {
     return {
         pos: _pos,
         base: _base,
         height: _height,
         speed: _speed,
-        angle: _isDown ? PI/1.5 : PI/1.5 + PI
+        angle: _isDown ? PI/1.5 : PI/1.5 + PI,
+        color: _color
     };
 }
