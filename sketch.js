@@ -38,22 +38,31 @@ function setup() {
 
     spawners = [
         {
-            pos: createVector(C.width * 0.32, C.height * -0.5),
+            pos: createVector(C.width * 0.33, C.height * -0.5),
             cooldown: 0,
-            interval: 90,
+            interval: 145,
             base: C.width * 0.1,
-            height: C.height * 0.3,
-            speed: C.height * 0.005,
+            height: C.height * 0.35,
+            speed: C.height * 0.003,
             isDown: true
         },
         {
-            pos: createVector(C.width * 0.51, C.height * 0.6),
+            pos: createVector(C.width * -0.038, C.height * 1.2),
             cooldown: 0,
-            interval: 90,
-            base: C.width * 0.25,
+            interval: 150,
+            base: C.width * 0.28,
             height: C.height * 0.52,
-            speed: C.height * 0.008,
+            speed: C.height * 0.005,
             isDown: false
+        },
+        {
+            pos: createVector(C.width * 0.85, C.height * -0.8),
+            cooldown: 0,
+            interval: 420,
+            base: C.width * 0.18,
+            height: C.height * 0.64,
+            speed: C.height * 0.002,
+            isDown: true
         },
     ];
 
