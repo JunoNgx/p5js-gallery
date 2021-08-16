@@ -40,11 +40,21 @@ function setup() {
         {
             pos: createVector(C.width * 0.32, C.height * -0.5),
             cooldown: 0,
-            interval: 120,
+            interval: 90,
             base: C.width * 0.1,
             height: C.height * 0.3,
-            speed: C.height * 0.01
-        }
+            speed: C.height * 0.005,
+            isDown: true
+        },
+        {
+            pos: createVector(C.width * 0.51, C.height * 0.6),
+            cooldown: 0,
+            interval: 90,
+            base: C.width * 0.25,
+            height: C.height * 0.52,
+            speed: C.height * 0.008,
+            isDown: false
+        },
     ];
 
     createCanvas(C.width, C.height);
@@ -62,7 +72,8 @@ function draw() {
                 createVector(s.pos.x, s.pos.y),
                 s.base,
                 s.height,
-                s.speed
+                s.speed,
+                s.isDown
             ));
             s.cooldown = s.interval;
         }
@@ -74,8 +85,11 @@ function draw() {
     // rect(C.width*0.1, C.height*0.1, C.width*0.8, C.height*0.8);
     shapes.forEach((s) => {
 
-        s.pos.x += s.speed*cos(s.angle);
+        // s.pos.y = (s.isDown)
+        // ? s.pos.y + s.speed*sin(s.angle)
+        // : s.pos.y - s.speed*sin(s.angle);
         s.pos.y += s.speed*sin(s.angle);
+        s.pos.x += s.speed*cos(s.angle);
 
         // let tl = createVector(s.pos.x - s.base/2, s.pos.y - s.height/2);
         // let tr = createVector(s.pos.x + s.base/2, s.pos.y - s.height/2);
@@ -107,12 +121,12 @@ function draw() {
     text("Juno Nguyen", C.mid.x, C.mid.y);
 }
 
-function paral(_pos, _base, _height, _speed) {
+function paral(_pos, _base, _height, _speed, _isDown) {
     return {
         pos: _pos,
         base: _base,
         height: _height,
         speed: _speed,
-        angle: PI/1.5
+        angle: _isDown ? PI/1.5 : PI/1.5 + PI
     };
 }
