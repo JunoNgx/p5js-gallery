@@ -38,19 +38,19 @@ function setup() {
 
     spawners = [
         {
-            pos: createVector(C.width * 0.33, C.height * -0.5),
+            pos: createVector(C.width * 0.3, C.height * -0.5),
             cooldown: 0,
             interval: 145,
-            base: C.width * 0.1,
+            base: C.width * 0.14,
             height: C.height * 0.35,
             speed: C.height * 0.003,
             isDown: true
         },
         {
-            pos: createVector(C.width * -0.038, C.height * 1.2),
+            pos: createVector(C.width * -0.032, C.height * 1.2),
             cooldown: 0,
             interval: 120,
-            base: C.width * 0.28,
+            base: C.width * 0.29,
             height: C.height * 0.47,
             speed: C.height * 0.005,
             isDown: false
@@ -81,7 +81,7 @@ function setup() {
 function draw() {
     // background(102, 205, 170);
     // background(238, 238, 238);
-    background(0);
+    background(238);
 
     spawners.forEach(s => {
         s.cooldown--;
@@ -99,7 +99,7 @@ function draw() {
     // console.log(spawners.length);
     // console.log(spawners[0].cooldown);
 
-    color(170);
+    // color(44);
     // rect(C.width*0.1, C.height*0.1, C.width*0.8, C.height*0.8);
     shapes.forEach((s) => {
 
@@ -117,6 +117,8 @@ function draw() {
         const tr = createVector(s.pos.x + s.base, s.pos.y);
         const bl = createVector(s.pos.x - s.height*tan(s.angle-HALF_PI), s.pos.y + s.height);
         const br = createVector(bl.x + s.base, s.pos.y + s.height);
+
+        fill(10);
         noStroke();
         quad(tl.x, tl.y, tr.x, tr.y, br.x, br.y, bl.x, bl.y);
         
@@ -137,6 +139,7 @@ function draw() {
     );
     // console.log(shapes);
 
+    fill(238, 238, 238);
     textAlign(CENTER);
     textSize(width*0.15);
     text("Juno Nguyen", C.mid.x, C.mid.y);
