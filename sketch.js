@@ -105,7 +105,7 @@ function draw() {
     fill(238, 238, 238);
     textAlign(CENTER);
     textSize(width*0.15);
-    text("Juno Nguyen", C.mid.x, C.mid.y);
+    text("Hello world", C.mid.x, C.mid.y);
 }
 
 function paral(_pos, _base, _height, _speed, _isDown, _color) {
