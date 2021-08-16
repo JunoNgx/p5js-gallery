@@ -49,9 +49,9 @@ function setup() {
         {
             pos: createVector(C.width * -0.038, C.height * 1.2),
             cooldown: 0,
-            interval: 150,
+            interval: 120,
             base: C.width * 0.28,
-            height: C.height * 0.52,
+            height: C.height * 0.47,
             speed: C.height * 0.005,
             isDown: false
         },
@@ -63,6 +63,15 @@ function setup() {
             height: C.height * 0.64,
             speed: C.height * 0.002,
             isDown: true
+        },
+        {
+            pos: createVector(C.width * 0.4, C.height * 1.5),
+            cooldown: 0,
+            interval: 60,
+            base: C.width * 0.30,
+            height: C.height * 0.17,
+            speed: C.height * 0.004,
+            isDown: false
         },
     ];
 
