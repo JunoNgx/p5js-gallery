@@ -113,7 +113,10 @@ function draw() {
         //     s.speed = random(G.SPEED_MIN, G.SPEED_MAX);
         // }
     });
-    shapes = shapes.filter(s => s.pos.y < C.height);
+    shapes = shapes.filter(s =>
+        C.height * -1.0 < s.pos.y
+        && s.pos.y < C.height * 2.0
+    );
     // console.log(shapes);
 
     textAlign(CENTER);
