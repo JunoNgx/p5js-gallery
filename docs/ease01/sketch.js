@@ -97,10 +97,6 @@ function draw() {
     });
 
     explosions = explosions.filter(e => e.lifetime > 3);
-
-    console.log(explosions.length);
-    
-
 }
 
 /**
