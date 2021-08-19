@@ -4,10 +4,14 @@ const G = {
     EXPLOSION_LIFETIME_MIN: 30,
     EXPLOSION_LIFETIME_MAX: 60,
     EXPLOSION_SIZE_INIT: 0.05,
-    EXPLOSION_SIZE_FINAL_MIN: 0.2,
-    EXPLOSION_SIZE_FINAL_MAX: 0.5,
+    EXPLOSION_SIZE_FINAL_MIN: 0.1,
+    EXPLOSION_SIZE_FINAL_MAX: 0.3,
     EXPLOSION_WEIGHT_INIT: 0.2,
     EXPLOSION_WEIGHT_FINAL: 0,
+    SPLASH_DIST_INIT: 0.0001,
+    SPLASH_DIST_FINAL: 0.2,
+    SPLASH_LENGTH_INIT: 0.1,
+    SPLASH_LENGTH_FINAL: 0.0,
 };
 /** @type {number} */
 let size;
@@ -69,6 +73,27 @@ function draw() {
 
         strokeWeight(size * weight * 0.5);
         arc(e.pos.x, e.pos.y, eSize, eSize, 0, TWO_PI);
+
+        for (let i = 0; i < 8; i++) {
+
+            strokeWeight(size * 0.004);
+
+            const angle = i * PI/4;
+            const dist = (G.SPLASH_DIST_INIT +
+                (G.SPLASH_DIST_FINAL - G.SPLASH_DIST_INIT)
+                * easeOutCubic(progress)) * size;
+            const length = (G.SPLASH_LENGTH_INIT +
+                (G.SPLASH_LENGTH_FINAL - G.SPLASH_LENGTH_INIT)
+                * easeOutCubic(progress)) * size;
+
+            const x1 = e.pos.x + dist*cos(angle);
+            const y1 = e.pos.y + dist*sin(angle);
+
+            const x2 = x1 + length*cos(angle);
+            const y2 = y1 + length*sin(angle);
+
+            line(x1, y1, x2, y2);
+        }
     });
 
     explosions = explosions.filter(e => e.lifetime > 10);
