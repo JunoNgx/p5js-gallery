@@ -1,4 +1,4 @@
-# P5JS text slide
+<!-- # P5JS text slide
 
 A simple creative coding project driven by motion graphic and typography.
 ## Description
@@ -14,4 +14,4 @@ This project has also been ported to vanilla Javascript using only HTML5 canvas 
 ## How to run
 
 1. Clone the repository.
-2. Open `index.html` with any broswer with Javascript enabled.
+2. Open `index.html` with any broswer with Javascript enabled. -->
