@@ -1,4 +1,8 @@
-<!-- # P5JS text slide
+# P5js Creative Coding Gallery
+
+A collection of creative coding works made with [p5js](https://p5js.org/).
+
+<!-- # P5JgfjdskfjsdklfjsdklfjkdlsS text slide
 
 A simple creative coding project driven by motion graphic and typography.
 ## Description
