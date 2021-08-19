@@ -1,8 +1,8 @@
 const G = {
-    SPAWN_COOLDOWN_MIN: 10,
-    SPAWN_COOLDOWN_MAX: 90,
-    EXPLOSION_LIFETIME_MIN: 30,
-    EXPLOSION_LIFETIME_MAX: 60,
+    SPAWN_COOLDOWN_MIN: 5,
+    SPAWN_COOLDOWN_MAX: 15,
+    EXPLOSION_LIFETIME_MIN: 20,
+    EXPLOSION_LIFETIME_MAX: 90,
     EXPLOSION_SIZE_INIT: 0.05,
     EXPLOSION_SIZE_FINAL_MIN: 0.1,
     EXPLOSION_SIZE_FINAL_MAX: 0.3,
@@ -96,7 +96,7 @@ function draw() {
         }
     });
 
-    explosions = explosions.filter(e => e.lifetime > 10);
+    explosions = explosions.filter(e => e.lifetime > 3);
 
     console.log(explosions.length);
     
