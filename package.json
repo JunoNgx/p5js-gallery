@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "@types/p5": "^1.3.0",
+    "light-server": "^2.9.1"
+  },
+  "name": "p5js-gallery",
+  "version": "0.0.1",
+  "description": "A creative coding project",
+  "directories": {
+    "dist": "dist"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "watch": "light-server -s dist -w \"dist/**/*.js # # reload\""
+  },
+  "author": "Juno Nguyen",
+  "license": "MIT"
+}
