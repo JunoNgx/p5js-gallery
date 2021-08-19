@@ -1,17 +1,46 @@
-let C = {width: null, height: null, mid: null};
+/** 
+ * @type {{
+ * width: number,
+ * height: number,
+ * mid: import("p5").Vector
+ * }}
+ * */
+let C;
 
-/** @typedef {{pos: Vector, base: number, height: number, angle: number, speed: number}} Parallelogram */
+/**
+ * @typedef {{
+ * pos: import("p5").Vector,
+ * base: number,
+ * height: number,
+ * angle: number,
+ * speed: number,
+ * color: import("p5").Color,
+ * }} Parallelogram
+ * */
 /** @type { Parallelogram [] } */
 let shapes;
 
-/** @typedef {{cooldown: number, pos: Vector, interval: number, base: number, height: number, speed: number, color: Color}} Spawner */
+/** 
+ * @typedef {{
+ * cooldown: number,
+ * pos: import("p5").Vector,
+ * interval: number,
+ * base: number,
+ * height: number,
+ * speed: number,
+ * color: import("p5").Color,
+ * isDown: boolean,
+ * }} Spawner
+ * */
 /** @type { Spawner [] } */
 let spawners;
 
 function setup() {
-    C.width = windowWidth;
-    C.height = windowWidth/2;
-    C.mid = createVector(C.width*0.5, C.height*0.5);
+    C = {
+        width: windowWidth,
+        height: windowWidth/2,
+        mid: createVector(windowWidth*0.5, windowWidth*0.25)
+    };
 
     shapes = [];
 
@@ -108,6 +137,16 @@ function draw() {
     text("Hello world", C.mid.x, C.mid.y);
 }
 
+/**
+ * Create a parallelogram data object
+ * @param {import("p5").Vector} _pos 
+ * @param {number} _base 
+ * @param {number} _height 
+ * @param {number} _speed 
+ * @param {boolean} _isDown 
+ * @param {import("p5").Color} _color 
+ * @returns {Parallelogram}
+ */
 function paral(_pos, _base, _height, _speed, _isDown, _color) {
     return {
         pos: _pos,
