@@ -7,11 +7,11 @@
   "version": "0.0.1",
   "description": "A creative coding project",
   "directories": {
-    "dist": "dist"
+    "docs": "docs"
   },
   "devDependencies": {},
   "scripts": {
-    "watch": "light-server -s dist -w \"dist/**/*.js # # reload\""
+    "watch": "light-server -s docs -w \"docs/**/*.js # # reload\""
   },
   "author": "Juno Nguyen",
   "license": "MIT"
