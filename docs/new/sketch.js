@@ -67,9 +67,9 @@ function draw() {
     explosions.forEach(e => {
         e.lifetime--;
         const progress = (e.lifetime_init - e.lifetime)/e.lifetime_init;
-        const eSize = e.size_init + (e.size_final - e.size_init) * easeOutCubic(progress);
+        const eSize = e.size_init + (e.size_final - e.size_init) * easeFunc(progress);
         const weight = G.EXPLOSION_WEIGHT_INIT +
-            (G.EXPLOSION_WEIGHT_FINAL - G.EXPLOSION_WEIGHT_INIT) * easeOutCubic(progress);
+            (G.EXPLOSION_WEIGHT_FINAL - G.EXPLOSION_WEIGHT_INIT) * easeFunc(progress);
 
         strokeWeight(size * weight * 0.5);
         arc(e.pos.x, e.pos.y, eSize, eSize, 0, TWO_PI);
@@ -81,10 +81,10 @@ function draw() {
             const angle = i * PI/4;
             const dist = (G.SPLASH_DIST_INIT +
                 (G.SPLASH_DIST_FINAL - G.SPLASH_DIST_INIT)
-                * easeOutCubic(progress)) * size;
+                * easeFunc(progress)) * size;
             const length = (G.SPLASH_LENGTH_INIT +
                 (G.SPLASH_LENGTH_FINAL - G.SPLASH_LENGTH_INIT)
-                * easeOutCubic(progress)) * size;
+                * easeFunc(progress)) * size;
 
             const x1 = e.pos.x + dist*cos(angle);
             const y1 = e.pos.y + dist*sin(angle);
@@ -107,6 +107,28 @@ function draw() {
  * @param {number} x 
  * @returns {number}
  */
-function easeOutCubic(x) {
-    return 1 - pow(1 - x, 3);    
+function easeFunc(x) {
+
+    // easeOutCirc
+    // return sqrt(1 - pow(x - 1, 2));
+
+    // easeInOutExpo
+    // return x === 0
+    // ? 0
+    // : x === 1
+    // ? 1
+    // : x < 0.5 ? pow(2, 20 * x - 10) / 2
+    // : (2 - pow(2, -20 * x + 10)) / 2;
+
+    // easeOutExpo
+    return x === 1 ? 1 : 1 - pow(2, -10 * x);
+
+    // easeOutSine
+    // return sin((x * PI) / 2);
+
+    // easeOutQuad
+    // return 1 - pow(1 - x, 4);
+
+    // easeOutCubic
+    // return 1 - pow(1 - x, 3);
 }
