@@ -1,7 +1,7 @@
 const G = {
     ANIM_TIME: 180,
     SQUARE_SIZE: 0.05,
-    SQUARE_MOV_RADIUS: 0.2,
+    SQUARE_MOV_RADIUS: 0.3,
     HEART_RADIUS: 0.12,
     HEART_ALPHA_INIT: 100,
     HEART_ALPHA_CHANGE: 155,
@@ -111,6 +111,7 @@ function draw() {
     arc(mid.x, mid.y, br, br, 0, PI*2);
 
     // Draw the squares
+    sq1.angle += 0.1;
     const squareAngle = PI*2*progress;
     const sq1pos = createVector(
         mid.x + size.s * G.SQUARE_MOV_RADIUS*Math.cos(squareAngle),
@@ -119,8 +120,10 @@ function draw() {
     let sq1ps = [];
     for (let i = 0; i < 4; i++) {
         sq1ps[i] = createVector(
-            sq1pos.x + size.s * G.SQUARE_SIZE*Math.cos(i*Math.PI/2),
-            sq1pos.y + size.s * G.SQUARE_SIZE*Math.sin(i*Math.PI/2)
+            // sq1pos.x + size.s * G.SQUARE_SIZE*Math.cos(i*(sq1.angle + Math.PI/2)),
+            // sq1pos.y + size.s * G.SQUARE_SIZE*Math.sin(i*(sq1.angle + Math.PI/2))
+            sq1pos.x + size.s * G.SQUARE_SIZE*Math.cos(sq1.angle + i*Math.PI/2),
+            sq1pos.y + size.s * G.SQUARE_SIZE*Math.sin(sq1.angle + i*Math.PI/2)
         )
     }
     quad(
@@ -129,12 +132,6 @@ function draw() {
         sq1ps[2].x, sq1ps[2].y,
         sq1ps[3].x, sq1ps[3].y,
     )
-
-    
-
-
-    fill("#eee")
-    text(progress, 500, 500);
 }
 
 /**
