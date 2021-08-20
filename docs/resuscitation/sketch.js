@@ -26,7 +26,7 @@ let time;
 /** @type { Square [] } */
 let squares;
 
-/** @typedef { {radius: number, isRunning: boolean} } Splash*/
+/** @typedef { {radius: number} } Splash*/
 /** @type { Splash } */
 let splash;
 
@@ -43,7 +43,7 @@ function setup() {
         {radialPos: -Math.PI/2 + Math.PI * 4/3},
     ];
 
-    splash = {radius: size.l * 2, isRunning: false};
+    splash = {radius: size.l * 2};
 
     time = 0;
 
@@ -60,16 +60,11 @@ function draw() {
     const heartAnimMark = 0.7;
 
     // Drawing the splash
-    if (time > (G.ANIM_TIME * heartAnimMark) && !splash.isRunning) {
+    if (time > (G.ANIM_TIME * heartAnimMark)) {
         splash.radius = 0;
-        splash.isRunning = true;
     }
-    if (splash.isRunning) {
-        if (splash.radius < size.l * 3) {
-            splash.radius += size.s * G.SPLASH_SPEED;
-        } else {
-            splash.isRunning = false;
-        }
+    if (splash.radius < size.l * 2) {
+        splash.radius += size.s * G.SPLASH_SPEED;
     }
 
     noFill();
