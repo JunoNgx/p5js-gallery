@@ -5,17 +5,26 @@ body {
   color: #ccc;
   max-width: 1024px;
   margin: auto;
+  hyphens: auto;
+  line-height: 1.5;
+  padding: 0;
 }
 
 .banner {
   background-color: grey;
+  height: 15rem;
 }
-.banner__header {
+.banner__text {
   text-align: center;
   margin: auto;
 }
-.banner__subtitle {
-  text-align: center;
+.banner__text__header {
+  padding-top: 3rem;
+}
+
+.intro {
+  max-width: 512px;
+  margin: auto;
 }
 
 /*# sourceMappingURL=index.css.map */

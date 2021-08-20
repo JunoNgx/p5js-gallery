@@ -10,16 +10,26 @@ body {
     color: #ccc;
     max-width: 1024px;
     margin: auto;
+    hyphens: auto;
+    line-height: 1.5;
+    padding: 0;
 }
 
 .banner {
     background-color: grey;
-    &__header {
+    height: 15rem;
+    &__text {
         text-align: center;
         margin: auto;
+        &__header {
+            padding-top: 3rem;
+        }
+        // &__subtitle {
+        // }
     }
+}
 
-    &__subtitle {
-        text-align: center;
-    }
+.intro {
+    max-width: 512px;
+    margin: auto;
 }
