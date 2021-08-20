@@ -27,4 +27,9 @@ body {
   margin: auto;
 }
 
+.footer {
+  margin: 3rem auto 3rem auto;
+  text-align: center;
+}
+
 /*# sourceMappingURL=index.css.map */
