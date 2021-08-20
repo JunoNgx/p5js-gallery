@@ -1,7 +1,7 @@
 const G = {
     ANIM_TIME: 180,
     SQUARE_SIZE: 0.05,
-    SQUARE_MOV_RADIUS: 0.3,
+    SQUARE_MOV_RADIUS: 0.35,
     HEART_RADIUS: 0.12,
     HEART_ALPHA_INIT: 100,
     HEART_ALPHA_CHANGE: 155,
@@ -18,14 +18,16 @@ let time;
 
 /**
  * @typedef {{
- * pos: import("p5").Vector,
- * angle: number
+ * radialPos: number
  * }} Square
  * */
-/** @type { Square } */
-let sq1;
-/** @type { Square } */
-let sq2;
+// /** @type { Square } */
+// let sq1;
+// /** @type { Square } */
+// let sq2;
+
+/** @type { Square [] } */
+let squares;
 
 function setup() {
     size = {
@@ -34,14 +36,21 @@ function setup() {
     };
     mid = createVector(windowWidth * 0.5, windowHeight * 0.5);
 
-    sq1 = {
-        pos: createVector(mid.x + size.s * 0.2, mid.y),
-        angle: 0
-    };
-    sq1 = {
-        pos: createVector(mid.x - size.s * 0.2, mid.y),
-        angle: 0
-    };
+    // sq1 = {
+    //     pos: createVector(mid.x + size.s * 0.2, mid.y),
+    //     angle: 0
+    // };
+    // sq1 = {
+    //     pos: createVector(mid.x - size.s * 0.2, mid.y),
+    //     angle: 0
+    // };
+
+    squares = [
+        {radialPos: 0},
+        {radialPos: Math.PI * 2/3},
+        {radialPos: Math.PI * 4/3},
+    ];
+
     time = 0;
 
     createCanvas(windowWidth, windowHeight);
@@ -111,27 +120,52 @@ function draw() {
     arc(mid.x, mid.y, br, br, 0, PI*2);
 
     // Draw the squares
-    sq1.angle += 0.1;
-    const squareAngle = PI*2*progress;
-    const sq1pos = createVector(
-        mid.x + size.s * G.SQUARE_MOV_RADIUS*Math.cos(squareAngle),
-        mid.y + size.s * G.SQUARE_MOV_RADIUS*Math.sin(squareAngle),
-    );
-    let sq1ps = [];
-    for (let i = 0; i < 4; i++) {
-        sq1ps[i] = createVector(
-            // sq1pos.x + size.s * G.SQUARE_SIZE*Math.cos(i*(sq1.angle + Math.PI/2)),
-            // sq1pos.y + size.s * G.SQUARE_SIZE*Math.sin(i*(sq1.angle + Math.PI/2))
-            sq1pos.x + size.s * G.SQUARE_SIZE*Math.cos(sq1.angle + i*Math.PI/2),
-            sq1pos.y + size.s * G.SQUARE_SIZE*Math.sin(sq1.angle + i*Math.PI/2)
-        )
-    }
-    quad(
-        sq1ps[0].x, sq1ps[0].y,
-        sq1ps[1].x, sq1ps[1].y,
-        sq1ps[2].x, sq1ps[2].y,
-        sq1ps[3].x, sq1ps[3].y,
-    )
+    const squareRadialPosition = PI*2*progress;
+    const squareAngle = progress * Math.PI * 8;
+    squares.forEach(s => {
+        const squarePos = createVector(
+            mid.x + size.s * G.SQUARE_MOV_RADIUS*Math.cos(squareRadialPosition + s.radialPos),
+            mid.y + size.s * G.SQUARE_MOV_RADIUS*Math.sin(squareRadialPosition + s.radialPos),
+        );
+        let points = [];
+        beginShape();
+        for (let i = 0; i < 4; i++) {
+            points[i] = createVector(
+                squarePos.x + size.s * G.SQUARE_SIZE*Math.cos(squareAngle + i*Math.PI/2),
+                squarePos.y + size.s * G.SQUARE_SIZE*Math.sin(squareAngle + i*Math.PI/2)
+            )
+            // vertex(points[i].x, points[i].y);
+        }
+        endShape();
+
+        beginShape()
+        vertex(points[0].x, points[0].y);
+        vertex(points[1].x, points[1].y);
+        vertex(points[2].x, points[2].y);
+        vertex(points[3].x, points[3].y);
+        endShape();
+        // endShape(CLOSE); // This is the correct way to draw a full square
+    });
+    // sq1.angle += 0.1;
+    // const sq1pos = createVector(
+    //     mid.x + size.s * G.SQUARE_MOV_RADIUS*Math.cos(squareAngle),
+    //     mid.y + size.s * G.SQUARE_MOV_RADIUS*Math.sin(squareAngle),
+    // );
+    // let sq1ps = [];
+    // for (let i = 0; i < 4; i++) {
+    //     sq1ps[i] = createVector(
+    //         // sq1pos.x + size.s * G.SQUARE_SIZE*Math.cos(i*(sq1.angle + Math.PI/2)),
+    //         // sq1pos.y + size.s * G.SQUARE_SIZE*Math.sin(i*(sq1.angle + Math.PI/2))
+    //         sq1pos.x + size.s * G.SQUARE_SIZE*Math.cos(sq1.angle + i*Math.PI/2),
+    //         sq1pos.y + size.s * G.SQUARE_SIZE*Math.sin(sq1.angle + i*Math.PI/2)
+    //     )
+    // }
+    // quad(
+    //     sq1ps[0].x, sq1ps[0].y,
+    //     sq1ps[1].x, sq1ps[1].y,
+    //     sq1ps[2].x, sq1ps[2].y,
+    //     sq1ps[3].x, sq1ps[3].y,
+    // )
 }
 
 /**
