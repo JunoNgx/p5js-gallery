@@ -105,11 +105,32 @@ function draw() {
             G.ANIM_TIME * (1-heartAnimMark)
         );
     }
-
     noFill();
-    stroke('dddddd');
+    stroke('#ddd');
     strokeWeight(2);
     arc(mid.x, mid.y, br, br, 0, PI*2);
+
+    // Draw the squares
+    const squareAngle = PI*2*progress;
+    const sq1pos = createVector(
+        mid.x + size.s * G.SQUARE_MOV_RADIUS*Math.cos(squareAngle),
+        mid.y + size.s * G.SQUARE_MOV_RADIUS*Math.sin(squareAngle),
+    );
+    let sq1ps = [];
+    for (let i = 0; i < 4; i++) {
+        sq1ps[i] = createVector(
+            sq1pos.x + size.s * G.SQUARE_SIZE*Math.cos(i*Math.PI/2),
+            sq1pos.y + size.s * G.SQUARE_SIZE*Math.sin(i*Math.PI/2)
+        )
+    }
+    quad(
+        sq1ps[0].x, sq1ps[0].y,
+        sq1ps[1].x, sq1ps[1].y,
+        sq1ps[2].x, sq1ps[2].y,
+        sq1ps[3].x, sq1ps[3].y,
+    )
+
+    
 
 
     fill("#eee")
