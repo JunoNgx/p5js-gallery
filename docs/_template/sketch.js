@@ -7,6 +7,7 @@ let size;
 function setup() {
     size = (windowWidth > windowHeight) ? windowWidth : windowHeight;
 
+    createCanvas(windowWidth, windowHeight);
 }
 
 function draw() {
