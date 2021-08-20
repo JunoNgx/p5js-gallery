@@ -116,15 +116,8 @@ function draw() {
                 squarePos.x + size.s * G.SQUARE_SIZE*Math.cos(squareAngle + i*Math.PI/2),
                 squarePos.y + size.s * G.SQUARE_SIZE*Math.sin(squareAngle + i*Math.PI/2)
             )
-            // vertex(points[i].x, points[i].y);
+            vertex(points[i].x, points[i].y);
         }
-        endShape();
-
-        beginShape()
-        vertex(points[0].x, points[0].y);
-        vertex(points[1].x, points[1].y);
-        vertex(points[2].x, points[2].y);
-        vertex(points[3].x, points[3].y);
         endShape();
         // endShape(CLOSE); // This is the correct way to draw a full square
     });
