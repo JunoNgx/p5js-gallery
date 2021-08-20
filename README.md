@@ -2,20 +2,28 @@
 
 A collection of creative coding works made with [p5js](https://p5js.org/).
 
-<!-- # P5JgfjdskfjsdklfjsdklfjkdlsS text slide
+## Creative codings?
+
+From [Wikipedia](https://en.wikipedia.org/wiki/Creative_coding):
+
+> Creative coding is a type of computer programming in which the goal is to create something expressive instead of something functional.
+
+In other words, this is a strictly recreational project I pursue entirely for personal enjoyment and expression. Most of the work here are created with [p5js](https://p5js.org/), a Javascript library tailored for this purpose. The remaining few (which are all indicated) uses [vanilla canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API).
 
 A simple creative coding project driven by motion graphic and typography.
-## Description
+## Structure
 
-The project is made with [p5js](https://p5js.org/), a Javascript framework made for creative coding. A string is text is displayed, but hidden by its colour, which coincides with the background color. The content of the string is slowly revealed by a series of moving parallelograms as negative space.
+This project is setup with [JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) and [p5-types](https://github.com/p5-types/p5.ts) for type checking and `light-server` local deployment.
 
-The project can be viewed via [GitHub Page](https://junongx.github.io/p5js-text-slide/). 
+The works included in this project are stored in the folder `docs` to facilitate the use of GitHub Page. Each project is separated in a sub-folder, though they share the use of the library files.
 
-## Branches
+## List of works
 
-This project has also been ported to vanilla Javascript using only HTML5 canvas API on the branch `vanilla-js`. A variant of this is deployed on my portfolio website.
-
+TODO
 ## How to run
 
-1. Clone the repository.
-2. Open `index.html` with any broswer with Javascript enabled. -->
+1. Clone the repository
+2. Change directory to the repository `cd p5js-gallery`
+3. Setup `npm install`
+4. Run the `light-server` with the script `npm run watch`
+5. Open `http://localhost:4000/<piece-name>` with a web browser
