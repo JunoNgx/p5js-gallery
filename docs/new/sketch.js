@@ -131,22 +131,6 @@ function draw() {
 }
 
 /**
- * @param {number} x 
- * @returns {number}
- */
-function easeOutExpo(x) {
-
-    // easeOutExpo
-    return x === 1 ? 1 : 1 - pow(2, -10 * x);
-
-    // easeOutQuad
-    // return 1 - pow(1 - x, 4);
-
-    // easeOutCubic
-    // return 1 - pow(1 - x, 3);
-}
-
-/**
  * 
  * @param {number} t Time
  * @param {number} b Initial value
