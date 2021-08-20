@@ -3,6 +3,8 @@ const G = {
     SQUARE_SIZE: 0.05,
     SQUARE_MOV_RADIUS: 0.2,
     HEART_RADIUS: 0.12,
+    HEART_ALPHA_INIT: 100,
+    HEART_ALPHA_CHANGE: 155,
     BEAT_RADIUS_INIT: 0.32,
     BEAT_RADIUS_CHANGE: 0.1
 };
@@ -50,10 +52,28 @@ function draw() {
     time++;
     if (time > G.ANIM_TIME) time = 0;
     const progress = time/G.ANIM_TIME;
-
+    const heartAnimMark = 0.7;
+    
     // Drawing the heart/triangle
+    let ta = G.HEART_ALPHA_INIT;
+    if (progress <= heartAnimMark) {
+        ta = easeInElastic(
+            time,
+            G.HEART_ALPHA_INIT,
+            G.HEART_ALPHA_CHANGE,
+            G.ANIM_TIME * heartAnimMark
+        );
+    } else {
+        ta = easeOutExpo (
+            time - (G.ANIM_TIME * heartAnimMark),
+            G.HEART_ALPHA_INIT + G.HEART_ALPHA_CHANGE,
+            -G.HEART_ALPHA_CHANGE,
+            G.ANIM_TIME * (1 - heartAnimMark)
+        )
+    }
     noStroke();
-    fill("#CD5C5C");
+    // fill("#CD5C5C");
+    fill(205, 92, 92, ta);
     const triLeft = createVector(
         mid.x + (size.s * G.HEART_RADIUS) * cos(-PI*5/6),
         mid.y + (size.s * G.HEART_RADIUS) * sin(-PI*5/6)
@@ -70,7 +90,6 @@ function draw() {
     
     // Draw the beat
     let br;
-    const heartAnimMark = 0.7;
     if (progress <= heartAnimMark) {
         br = easeInElastic(
             time,
