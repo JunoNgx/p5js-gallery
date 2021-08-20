@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Bitter&display=swap');
+
+$pri-col: #ccc;
+$bac-col: #444;
+$acc-col: #CD5C5C;
+
+body {
+    background: $bac-col;
+    font-family: 'Bitter', 'serif';
+    color: #ccc;
+    max-width: 1024px;
+    margin: auto;
+}
+
+.banner {
+    background-color: grey;
+    &__header {
+        text-align: center;
+        margin: auto;
+    }
+
+    &__subtitle {
+        text-align: center;
+    }
+}

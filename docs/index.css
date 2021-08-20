@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Bitter&display=swap");
+body {
+  background: #444;
+  font-family: "Bitter", "serif";
+  color: #ccc;
+  max-width: 1024px;
+  margin: auto;
+}
+
+.banner {
+  background-color: grey;
+}
+.banner__header {
+  text-align: center;
+  margin: auto;
+}
+.banner__subtitle {
+  text-align: center;
+}
+
+/*# sourceMappingURL=index.css.map */
