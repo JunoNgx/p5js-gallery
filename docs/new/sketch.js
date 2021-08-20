@@ -6,7 +6,8 @@ const G = {
     HEART_ALPHA_INIT: 100,
     HEART_ALPHA_CHANGE: 155,
     BEAT_RADIUS_INIT: 0.32,
-    BEAT_RADIUS_CHANGE: 0.1
+    BEAT_RADIUS_CHANGE: 0.1,
+    RADIAL_POSITION_MARK: Math.PI*2
 };
 
 /** @type { {s: number, l: number} } */
@@ -102,7 +103,16 @@ function draw() {
     arc(mid.x, mid.y, br, br, 0, PI*2);
 
     // Draw the squares
-    const squareRadialPosition = PI*2*progress;
+    // const squareRadialPosition = PI*2*progress;
+    /** @type { number } */
+    let squareRadialPosition;
+    squareRadialPosition = easeLinear(
+        time,
+        0,
+        G.RADIAL_POSITION_MARK,
+        G.ANIM_TIME
+    );
+
     const squareAngle = progress * Math.PI * 8;
     squares.forEach(s => {
         const squarePos = createVector(
@@ -149,4 +159,20 @@ function easeInElastic (t, b, c, d) {
 // @ts-ignore
 function easeOutExpo (t, b, c, d) {
     return (t == d) ? b + c : c * (-Math.pow(2, -10 * t / d) + 1) + b;
+}
+
+//@ts-ignore
+function easeInOutQuad (t, b, c, d) {
+    if ((t /= d / 2) < 1) return c / 2 * t * t + b;
+    return -c / 2 * ((--t) * (t - 2) - 1) + b;
+}
+
+//@ts-ignore
+function easeLinear (t, b, c, d) {
+    return c * t / d + b;
+}
+
+//@ts-ignore
+function easeInOutSine (t, b, c, d) {
+    return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
 }
