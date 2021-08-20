@@ -2,12 +2,17 @@ const G = {
     ANIM_TIME: 180,
     SQUARE_SIZE: 0.05,
     SQUARE_MOV_RADIUS: 0.35,
-    HEART_RADIUS: 0.12,
-    HEART_ALPHA_INIT: 100,
-    HEART_ALPHA_CHANGE: 155,
-    BEAT_RADIUS_INIT: 0.32,
-    BEAT_RADIUS_CHANGE: 0.1,
-    RADIAL_POSITION_MARK: Math.PI*2
+    SQUARE_WEIGHT: 8,
+    HEART_RADIUS: 0.10,
+    HEART_ALPHA_INIT: 55,
+    HEART_ALPHA_CHANGE: 200,
+    BEAT_RADIUS_INIT: 0.30,
+    BEAT_RADIUS_CHANGE: 0.17,
+    BEAT_WEIGHT_INIT: 0.03,
+    BEAT_WEIGHT_CHANGE: 0.08,
+    RADIAL_POSITION_MARK: Math.PI*2,
+    SPLASH_WEIGHT: 0.05,
+    SPLASH_SPEED: 0.1
 };
 
 /** @type { {s: number, l: number} } */
@@ -21,6 +26,10 @@ let time;
 /** @type { Square [] } */
 let squares;
 
+/** @typedef { {radius: number, isRunning: boolean} } Splash*/
+/** @type { Splash } */
+let splash;
+
 function setup() {
     size = {
         l: (windowWidth >= windowHeight) ? windowWidth : windowHeight,
@@ -29,10 +38,12 @@ function setup() {
     mid = createVector(windowWidth * 0.5, windowHeight * 0.5);
 
     squares = [
-        {radialPos: 0},
-        {radialPos: Math.PI * 2/3},
-        {radialPos: Math.PI * 4/3},
+        {radialPos: -Math.PI/2},
+        {radialPos: -Math.PI/2 + Math.PI * 2/3},
+        {radialPos: -Math.PI/2 + Math.PI * 4/3},
     ];
+
+    splash = {radius: size.l * 2, isRunning: false};
 
     time = 0;
 
@@ -42,9 +53,29 @@ function setup() {
 function draw() {
     background(47);
     time++;
-    if (time > G.ANIM_TIME) time = 0;
+    if (time > G.ANIM_TIME) {
+        time = 0;
+    }
     const progress = time/G.ANIM_TIME;
     const heartAnimMark = 0.7;
+
+    // Drawing the splash
+    if (time > (G.ANIM_TIME * heartAnimMark) && !splash.isRunning) {
+        splash.radius = 0;
+        splash.isRunning = true;
+    }
+    if (splash.isRunning) {
+        if (splash.radius < size.l * 3) {
+            splash.radius += size.s * G.SPLASH_SPEED;
+        } else {
+            splash.isRunning = false;
+        }
+    }
+
+    noFill();
+    stroke("#CD5C5C");
+    strokeWeight(size.s * G.SPLASH_WEIGHT);
+    arc(mid.x, mid.y, splash.radius, splash.radius, 0, Math.PI*2);
     
     // Drawing the heart/triangle
     let ta = G.HEART_ALPHA_INIT;
@@ -97,9 +128,25 @@ function draw() {
             G.ANIM_TIME * (1-heartAnimMark)
         );
     }
+    let bw = 2;
+    // if (progress <= heartAnimMark) {
+    //     bw = easeInElastic(
+    //         time,
+    //         size.s * G.BEAT_WEIGHT_INIT,
+    //         size.s * G.BEAT_WEIGHT_CHANGE,
+    //         G.ANIM_TIME * heartAnimMark
+    //     );
+    // } else {
+    //     bw = easeOutExpo(
+    //         time - (G.ANIM_TIME * heartAnimMark),
+    //         size.s * (G.BEAT_WEIGHT_INIT + G.BEAT_WEIGHT_CHANGE),
+    //         -size.s * G.BEAT_WEIGHT_CHANGE,
+    //         G.ANIM_TIME * (1-heartAnimMark)
+    //     );
+    // }
     noFill();
     stroke('#ddd');
-    strokeWeight(2);
+    strokeWeight(bw);
     arc(mid.x, mid.y, br, br, 0, PI*2);
 
     // Draw the squares
@@ -113,6 +160,7 @@ function draw() {
         G.ANIM_TIME
     );
 
+    strokeWeight(G.SQUARE_WEIGHT);
     const squareAngle = progress * Math.PI * 8;
     squares.forEach(s => {
         const squarePos = createVector(
