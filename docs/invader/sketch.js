@@ -10,8 +10,8 @@ const G = {
     BULLET_WEIGHT: 0.02,
     MUZZLE_OFFSET: 0.001,
     COLLISION_DIST: 0.05,
-    EXPLOSION_SIZE_FINAL_MIN: 0.15,
-    EXPLOSION_SIZE_FINAL_MAX: 0.35,
+    EXPLOSION_SIZE_FINAL_MIN: 0.12,
+    EXPLOSION_SIZE_FINAL_MAX: 0.32,
     EXPLOSION_WEIGHT_INIT: 0.1,
     EXPLOSION_WEIGHT_CHANGE: -0.09,
     EXPLOSION_FRAGMENT_SIZE: 0.1
@@ -227,7 +227,7 @@ function drawBullet(b) {
     const bSize = size.s * G.BULLET_LENGTH/2;
 
     noFill();
-    stroke('#1fccbb');
+    stroke('#007de3');
     strokeWeight(size.s * G.BULLET_WEIGHT);
     line( b.pos.x, b.pos.y + bSize,
         b.pos.x, b.pos.y - bSize);
@@ -242,7 +242,7 @@ function drawBullet(b) {
 function drawExplosion(e) {
     noFill();
     rectMode(RADIUS);
-    stroke("#ff007a");
+    stroke("#f9ff8f");
     strokeWeight(e.weight);
     console.log(e.size);
     rect(e.pos.x, e.pos.y, e.size, e.size);
