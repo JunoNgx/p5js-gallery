@@ -96,7 +96,8 @@ function draw() {
                 }
                 break;
             case DState.IDLE:
-                seek(d, invaders);
+                const hasFoundTarget = seekTarget(d, invaders);
+                if (hasFoundTarget) d.state = DState.MOVING;
                 break;
         }
 
@@ -137,6 +138,9 @@ function drawDefender(d) {
     const bL = {x: d.pos.x - iSize, y: d.pos.y + iSize/2};
     const bR = {x: d.pos.x + iSize, y: d.pos.y + iSize/2};
     triangle(top.x, top.y, bL.x, bL.y, bR.x, bR.y);
+
+    fill("#fff");
+    text(d.state, d.pos.x, d.pos.y - 20);
 }
 
 /**
@@ -156,8 +160,30 @@ function drawInvader(i) {
 /**
  * Set a random suitable Invader as a target for the Defender
  * @param { Defender } d 
- * @param { Invader [] } i 
+ * @param { Invader [] } invaders
+ * @returns { boolean } hasFoundTarget
  */
-function seek(d, i) {
+function seekTarget(d, invaders) {
 
+    if (invaders.length === 0) return false;
+    else if (invaders.length === 1 && invaders[0].hasBeenMarked) return false;
+
+    /** @type {Invader} */
+    let target = random(invaders);
+    while (target.hasBeenMarked || target.pos.y > windowHeight * 0.6) {
+        target = random(invaders);
+    } 
+    target.hasBeenMarked = true;
+    d.destPos = createVector(target.pos.x, target.pos.y);
+
+    return true;
+}
+
+/**
+ * 
+ * @param {Invader} i 
+ * @returns {boolean}
+ */
+function isOnScreen(i) {
+    return 0 < i.pos.y && i.pos.y < windowHeight;
 }
