@@ -1,6 +1,6 @@
 /** @type { HTMLCanvasElement } */
 // @ts-expect-error
-let canvas = document.getElementById("drawCanvas");
+let canvas = document.getElementById("backgroundCanvas");
 /** @type { CanvasRenderingContext2D } */
 // @ts-expect-error
 let ctx = canvas.getContext("2d");
