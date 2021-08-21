@@ -4,8 +4,12 @@ const G = {
     REST_MIN: 30,
     REST_MAX: 90,
     INVADER_SPEED: 0.001,
-    DEFENDER_LERP_AMT: 0.5,
-    TARGET_Y_THRESHOLD: 0.6
+    DEFENDER_LERP_AMT: 0.3,
+    TARGET_Y_THRESHOLD: 0.6,
+    BULLET_SPEED: 0.1,
+    BULLET_LENGTH: 0.05,
+    BULLET_WEIGHT: 0.02,
+    MUZZLE_OFFSET: 0.001
 };
 /** @type { {s: number, l: number} } */
 let size;
@@ -34,9 +38,24 @@ const DState = {
 /** @type { Defender [] } */
 let defenders;
 
-/** @typedef {{ pos: import("p5").Vector, hasBeenMarked: boolean }} Invader */
+/** 
+ * @typedef {{
+ * pos: import("p5").Vector, 
+ * hasBeenMarked: boolean, 
+ * isDestroyed: boolean 
+ * }} Invader
+ * */
 /** @type { Invader [] } */
 let invaders;
+
+/**
+ * @typedef {{
+ * pos: import("p5").Vector,
+ * isDestroyed: boolean
+ * }} Bullet
+ * */
+/** @type { Bullet [] } */
+let bullets;
 
 /** @type {number} */
 let spawnCooldown;
@@ -63,6 +82,8 @@ function setup() {
         state: DState.RESTING
     });
     invaders = [];
+    bullets = [];
+
     spawnCooldown = random(G.SPAWN_COOLDOWN_MIN, G.SPAWN_COOLDOWN_MAX);
 
     createCanvas(windowWidth, windowHeight);
@@ -113,15 +134,24 @@ function draw() {
         drawDefender(d);
     });
 
-    invaders.forEach((i) => {
+    invaders = invaders.filter((i) => {
         i.pos.y += size.s * G.INVADER_SPEED;
-
         drawInvader(i);
+
+        return i.pos.y < windowHeight * 1.1 && !i.isDestroyed;
+    });
+
+    bullets = bullets.filter((b) => {
+        b.pos.y -= size.s * G.BULLET_SPEED;
+        drawBullet(b);
+
+        return !b.isDestroyed;
     });
     
-    noStroke();
-    fill('#fff');
-    text(invaders.length, 50, 50);
+    // DEBUG
+    // noStroke();
+    // fill('#fff');
+    // text(bullets.length, 50, 50);
 }
 
 // ======== Invaders
@@ -131,7 +161,8 @@ function spawnInvader() {
     const posY = random(windowHeight * -0.1, windowHeight * 0.0);
     invaders.push({
         pos: createVector(posX, posY),
-        hasBeenMarked: false
+        hasBeenMarked: false,
+        isDestroyed: false
     });
 }
 
@@ -147,6 +178,22 @@ function spawnInvader() {
     const bL = {x: i.pos.x - dSize, y: i.pos.y - dSize/2};
     const bR = {x: i.pos.x + dSize, y: i.pos.y - dSize/2};
     triangle(top.x, top.y, bL.x, bL.y, bR.x, bR.y);
+}
+
+/**
+ * 
+ * @param {Bullet} b 
+ */
+function drawBullet(b) {
+    const bSize = size.s * G.BULLET_LENGTH/2;
+
+    noFill();
+    stroke('#1fccbb');
+    strokeWeight(size.s * G.BULLET_WEIGHT);
+    line( b.pos.x, b.pos.y + bSize,
+        b.pos.x, b.pos.y - bSize);
+
+    // circle(b.pos.x, b.pos.y, 12)
 }
 
 // ======== Defenders
@@ -165,8 +212,9 @@ function drawDefender(d) {
     const bR = {x: d.pos.x + iSize, y: d.pos.y + iSize/2};
     triangle(top.x, top.y, bL.x, bL.y, bR.x, bR.y);
 
-    fill("#fff");
-    text(d.state, d.pos.x, d.pos.y - 20);
+    // // DEBUG
+    // fill("#fff");
+    // text(d.state, d.pos.x, d.pos.y - 20);
 }
 
 /**
@@ -174,7 +222,10 @@ function drawDefender(d) {
  * @param {Defender} d 
  */
 function fireShot(d) {
-
+    bullets.push({
+        pos: createVector(d.pos.x, d.pos.y + size.s * G.MUZZLE_OFFSET),
+        isDestroyed: false
+    })
 }
 
 // ======== Misc
@@ -200,7 +251,13 @@ function seekTarget(d, invaders) {
     /** @type {Invader} */
     let target = random(potentialTargets);
     target.hasBeenMarked = true;
-    d.destPos = createVector(target.pos.x, target.pos.y);
+    d.destPos = createVector(
+        target.pos.x,
+        random(
+            target.pos.y + size.s * 0.01,
+            windowHeight * G.TARGET_Y_THRESHOLD
+        )
+    );
 
     return true;
 }
