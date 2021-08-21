@@ -9,7 +9,10 @@ const G = {
     BULLET_LENGTH: 0.05,
     BULLET_WEIGHT: 0.02,
     MUZZLE_OFFSET: 0.001,
-    COLLISION_DIST: 0.05
+    COLLISION_DIST: 0.05,
+    EXPLOSION_SIZE_FINAL: 0.3,
+    EXPLOSION_WEIGHT_INIT: 0.1,
+    EXPLOSION_WEIGHT_CHANGE: -0.09,
 };
 /** @type { {s: number, l: number} } */
 let size;
@@ -57,6 +60,16 @@ let invaders;
 /** @type { Bullet [] } */
 let bullets;
 
+/**
+ * @typedef {{
+ * pos: import("p5").Vector,
+ * size: number,
+ * weight: number
+ * }} Explosion
+ */
+/** @type { Explosion [] } */
+let explosions;
+
 /** @type {number} */
 let spawnCooldown;
 
@@ -83,6 +96,7 @@ function setup() {
     });
     invaders = [];
     bullets = [];
+    explosions = [];
 
     spawnCooldown = random(G.SPAWN_COOLDOWN_MIN, G.SPAWN_COOLDOWN_MAX);
 
@@ -148,12 +162,26 @@ function draw() {
             if (b.pos.dist(i.pos) < size.s * G.COLLISION_DIST) {
                 i.isDestroyed = true;
                 b.isDestroyed = true;
+                explode(i.pos.x, i.pos.y);
             }
         });
 
         drawBullet(b);
 
         return b.pos.y > 0 && !b.isDestroyed;
+    });
+
+    explosions = explosions.filter((e) => {
+        e.size = lerp(e.size, size.s * G.EXPLOSION_SIZE_FINAL, 0.3);
+        e.weight = easeInQuart(
+            e.size,
+            size.s * G.EXPLOSION_WEIGHT_INIT,
+            size.s * G.EXPLOSION_WEIGHT_CHANGE,
+            size.s * G.EXPLOSION_SIZE_FINAL
+        )
+        drawExplosion(e);
+
+        return size.s*G.EXPLOSION_SIZE_FINAL - e.size > 2;
     });
     
     // DEBUG
@@ -204,6 +232,20 @@ function drawBullet(b) {
     // circle(b.pos.x, b.pos.y, 12)
 }
 
+/**
+ * 
+ * @param {Explosion} e 
+ */
+function drawExplosion(e) {
+    noFill();
+    rectMode(RADIUS);
+    stroke("#ff007a");
+    // strokeWeight((size.s * G.EXPLOSION_SIZE_FINAL) / (e.size));
+    strokeWeight(e.weight);
+    console.log(e.size);
+    rect(e.pos.x, e.pos.y, e.size, e.size);
+}
+
 // ======== Defenders
 
 /**
@@ -233,6 +275,19 @@ function fireShot(d) {
     bullets.push({
         pos: createVector(d.pos.x, d.pos.y + size.s * G.MUZZLE_OFFSET),
         isDestroyed: false
+    })
+}
+
+/**
+ * 
+ * @param {number} _x 
+ * @param {number} _y 
+ */
+function explode(_x, _y) {
+    explosions.push({
+        pos: createVector(_x, _y),
+        size: 1,
+        weight: size.s * G.EXPLOSION_WEIGHT_INIT
     })
 }
 
@@ -279,4 +334,16 @@ function seekTarget(d, invaders) {
  */
 function isOnScreen(i) {
     return 0 < i.pos.y && i.pos.y < windowHeight;
+}
+
+/**
+ * 
+ * @param {number} t 
+ * @param {number} b 
+ * @param {number} c 
+ * @param {number} d 
+ * @returns 
+ */
+function easeInQuart (t, b, c, d) {
+    return c * (t /= d) * t * t * t + b;
 }
