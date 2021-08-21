@@ -5,6 +5,8 @@ const G = {
     REST_MAX: 90,
     INVADER_SPEED: 0.003,
     DEFENDER_LERP_AMT: 0.3,
+    DEFENDER_SIZE_DEFAULT: 0.03,
+    DEFENDER_SIZE_ENLARGED: 0.07,
     BULLET_SPEED: 0.07,
     BULLET_LENGTH: 0.05,
     BULLET_WEIGHT: 0.02,
@@ -37,7 +39,8 @@ const DState = {
  * pos: import("p5").Vector,
  * destPos: import("p5").Vector,
  * state: DState,
- * restCooldown: number
+ * restCooldown: number,
+ * size: number
  * }} Defender
  */
 /** @type { Defender [] } */
@@ -89,12 +92,14 @@ function setup() {
         pos: createVector(windowWidth * 1/3, windowHeight * 3/4),
         destPos: createVector(0, 0),
         restCooldown: random(G.REST_MIN, G.REST_MAX),
+        size: size.s * G.DEFENDER_SIZE_DEFAULT,
         state: DState.RESTING
     });
     defenders.push({
         pos: createVector(windowWidth * 2/3, windowHeight * 3/4),
         destPos: createVector(0, 0),
         restCooldown: random(G.REST_MIN, G.REST_MAX),
+        size: size.s * G.DEFENDER_SIZE_DEFAULT,
         state: DState.RESTING
     });
     invaders = [];
@@ -118,6 +123,9 @@ function draw() {
     }
 
     defenders.forEach((d) => {
+
+        d.size = lerp(d.size, size.s * G.DEFENDER_SIZE_DEFAULT, 0.5);
+
         switch (d.state) {
             case DState.IDLE:
                 const hasFoundTarget = seekTarget(d, invaders);
@@ -135,6 +143,7 @@ function draw() {
 
             case DState.FIRING:
                 fireShot(d);
+                d.size = size.s * G.DEFENDER_SIZE_ENLARGED;
                 d.restCooldown = random(G.REST_MIN, G.REST_MAX)
                 d.state = DState.RESTING;
                 break;
@@ -244,7 +253,6 @@ function drawExplosion(e) {
     rectMode(RADIUS);
     stroke("#f9ff8f");
     strokeWeight(e.weight);
-    console.log(e.size);
     rect(e.pos.x, e.pos.y, e.size, e.size);
 
     for (let i = 0; i < 4; i++) {
@@ -264,13 +272,15 @@ function drawExplosion(e) {
  * @param {Defender} d 
  */
 function drawDefender(d) {
-    noFill();
-    strokeWeight(2);
-    stroke('#ddd');
-    const iSize = size.s * 0.03;
-    const top = {x: d.pos.x, y: d.pos.y - iSize};
-    const bL = {x: d.pos.x - iSize, y: d.pos.y + iSize/2};
-    const bR = {x: d.pos.x + iSize, y: d.pos.y + iSize/2};
+    // noFill();
+    // strokeWeight(2);
+    // stroke('#ddd');
+    noStroke();
+    fill("#ddd");
+    // const iSize = size.s * 0.03;
+    const top = {x: d.pos.x, y: d.pos.y - d.size};
+    const bL = {x: d.pos.x - d.size, y: d.pos.y + d.size/2};
+    const bR = {x: d.pos.x + d.size, y: d.pos.y + d.size/2};
     triangle(top.x, top.y, bL.x, bL.y, bR.x, bR.y);
 
     // // DEBUG
