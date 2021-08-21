@@ -13,7 +13,6 @@ function loop() {
     let currentTime = (new Date()).getTime();
     let deltaTime = currentTime - lastTime;
     if (deltaTime > INTERVAL) {
-        // update(deltaTime);
         draw();
         lastTime = currentTime - (deltaTime % INTERVAL)
     }
@@ -27,7 +26,7 @@ const G = {
     AMT_OF_PLANETS_MIN: 3,
     AMT_OF_PLANETS_MAX: 7,
     PLANET_SIZE_MIN: 8,
-    PLANET_SIZE_MAX: 16,
+    PLANET_SIZE_MAX: 18,
     PLANET_ROTATION_SPEED_MIN: -0.05,
     PLANET_ROTATION_SPEED_MAX: 0.05,
     PLANET_DISTANCE: 48
@@ -66,9 +65,6 @@ function setup() {
     canvas.height = window.innerHeight;
 
     planets = [];
-    // const noOfPlanets = Math.floor(Math.random())
-    //     * (G.MAX_AMT_OF_PLANETS - G.MIN_AMT_OF_PLANETS)
-    //     + G.MIN_AMT_OF_PLANETS;
     const noOfPlanets = Math.floor(randomWithRange(G.AMT_OF_PLANETS_MIN,
         G.AMT_OF_PLANETS_MAX));
     for (let i = 0; i < noOfPlanets; i++) {
@@ -87,12 +83,9 @@ function setup() {
         cursor.x = Math.round(e.clientX - canvasRect.left);
         cursor.y = Math.round(e.clientY - canvasRect.top);
     });
-    canvas.addEventListener("resize", e => {
-
-        console.log(e);
-        canvas.width = window.innerWidth * 0.5;
-        canvas.height = window.innerHeight * 0.5;
-
+    window.addEventListener("resize", e => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
         canvas.style.width = canvas.width + 'px';
         canvas.style.height = canvas.height + 'px';
     });
@@ -107,7 +100,8 @@ function draw() {
     core.x = lerp(core.x, cursor.x, 0.5);
     core.y = lerp(core.y, cursor.y, 0.5);
     rotation += 0.04;
-
+    
+    ctx.lineWidth = 3;
     // Draw the core
     /** @type { Vector[] } */
     let corePoints = [];
@@ -118,7 +112,6 @@ function draw() {
         );
     }
     ctx.strokeStyle = "#887";
-    ctx.lineWidth = 5;
     ctx.beginPath();
     ctx.moveTo(corePoints[0].x, corePoints[0].y);
     ctx.lineTo(corePoints[1].x, corePoints[1].y);
