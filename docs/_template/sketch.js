@@ -19,5 +19,7 @@ function setup() {
 }
 
 function draw() {
+    background(47);
+    
     time++;
 }
