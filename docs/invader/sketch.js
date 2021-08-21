@@ -5,7 +5,6 @@ const G = {
     REST_MAX: 90,
     INVADER_SPEED: 0.003,
     DEFENDER_LERP_AMT: 0.3,
-    TARGET_Y_THRESHOLD: 0.6,
     BULLET_SPEED: 0.07,
     BULLET_LENGTH: 0.05,
     BULLET_WEIGHT: 0.02,
@@ -111,7 +110,7 @@ function draw() {
             case DState.MOVING:
                 d.pos.x = lerp(d.pos.x, d.destPos.x, G.DEFENDER_LERP_AMT);
                 d.pos.y = lerp(d.pos.y, d.destPos.y, G.DEFENDER_LERP_AMT);
-                if (d.pos.dist(d.destPos) < 0.5 ) {
+                if (d.pos.dist(d.destPos) < 0.1 ) {
                     // d.pos.x = d.destPos.x;
                     d.state = DState.FIRING;
                 }
@@ -154,7 +153,7 @@ function draw() {
 
         drawBullet(b);
 
-        return !b.isDestroyed;
+        return b.pos.y > 0 && !b.isDestroyed;
     });
     
     // DEBUG
@@ -247,24 +246,26 @@ function fireShot(d) {
  */
 function seekTarget(d, invaders) {
 
-    // if (invaders.length === 0) return false;
-    // else if (invaders.length === 1 && invaders[0].hasBeenMarked) return false;
     let potentialTargets = invaders.filter(i => {
-        return windowHeight * 0.1 < i.pos.y
-            && i.pos.y < windowHeight * G.TARGET_Y_THRESHOLD
+        return windowHeight * 0.05 < i.pos.y
+            && i.pos.y < windowHeight * 0.8
             && !i.hasBeenMarked
     });
 
     if (potentialTargets.length === 0) return false;
 
     /** @type {Invader} */
-    let target = random(potentialTargets);
+    let target = potentialTargets[0];
+    potentialTargets.forEach(t => {
+        if (t.pos.y > target.pos.y) target = t;
+    });
+
     target.hasBeenMarked = true;
     d.destPos = createVector(
         target.pos.x,
         random(
-            target.pos.y + size.s * 0.1,
-            windowHeight * 0.9
+            target.pos.y + size.s * 0.15,
+            windowHeight * 0.95
         )
     );
 
