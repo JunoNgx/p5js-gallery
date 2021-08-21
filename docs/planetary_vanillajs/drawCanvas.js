@@ -24,8 +24,13 @@ window.onload = setup;
 
 const G = {
     CORE_RADIUS: 32,
-    MIN_AMT_OF_PLANETS: 2,
-    MAX_AMT_OF_PLANETS: 7,
+    AMT_OF_PLANETS_MIN: 3,
+    AMT_OF_PLANETS_MAX: 7,
+    PLANET_SIZE_MIN: 8,
+    PLANET_SIZE_MAX: 16,
+    PLANET_ROTATION_SPEED_MIN: -0.05,
+    PLANET_ROTATION_SPEED_MAX: 0.05,
+    PLANET_DISTANCE: 48
 }
 
 /**
@@ -48,6 +53,9 @@ let planets;
 /** @type { Vector } */
 let cursor;
 
+/** @type { Vector } */
+let core;
+
 /** @type { number } */
 let rotation;
 
@@ -61,22 +69,32 @@ function setup() {
     // const noOfPlanets = Math.floor(Math.random())
     //     * (G.MAX_AMT_OF_PLANETS - G.MIN_AMT_OF_PLANETS)
     //     + G.MIN_AMT_OF_PLANETS;
-    const noOfPlanets = Math.floor(randomWithRange(G.MIN_AMT_OF_PLANETS,
-        G.MAX_AMT_OF_PLANETS));
+    const noOfPlanets = Math.floor(randomWithRange(G.AMT_OF_PLANETS_MIN,
+        G.AMT_OF_PLANETS_MAX));
     for (let i = 0; i < noOfPlanets; i++) {
         planets.push({
-            size: randomWithRange(24, 48),
+            size: randomWithRange(G.PLANET_SIZE_MIN, G.PLANET_SIZE_MAX),
             rotation: Math.random() * Math.PI * 2,
-            rotationSpd: randomWithRange(-0.1, 0.1)
+            rotationSpd: randomWithRange(G.PLANET_ROTATION_SPEED_MIN,
+                G.PLANET_ROTATION_SPEED_MAX)
         });
     }
 
-    cursor = vec(0, 0);
+    cursor = vec(canvas.width/2, canvas.height/2);
+    core = vec(canvas.width/2, canvas.height/2);
     canvas.addEventListener("mousemove", (e) => {
         const canvasRect = canvas.getBoundingClientRect();
         cursor.x = Math.round(e.clientX - canvasRect.left);
         cursor.y = Math.round(e.clientY - canvasRect.top);
-        // console.log(cursor);
+    });
+    canvas.addEventListener("resize", e => {
+
+        console.log(e);
+        canvas.width = window.innerWidth * 0.5;
+        canvas.height = window.innerHeight * 0.5;
+
+        canvas.style.width = canvas.width + 'px';
+        canvas.style.height = canvas.height + 'px';
     });
     rotation = 0;
 
@@ -86,25 +104,26 @@ function setup() {
 function draw() {
     // Clear screen
     ctx.clearRect(0, 0, canvas.width, canvas.height) 
-
-    rotation += 0.01;
+    core.x = lerp(core.x, cursor.x, 0.5);
+    core.y = lerp(core.y, cursor.y, 0.5);
+    rotation += 0.04;
 
     // Draw the core
     /** @type { Vector[] } */
-    let core = [];
+    let corePoints = [];
     for (let i = 0; i < 4; i++) {
-        core[i] = vec(
-            cursor.x + G.CORE_RADIUS * Math.cos(rotation + Math.PI/2 * i),
-            cursor.y + G.CORE_RADIUS * Math.sin(rotation + Math.PI/2 * i),
+        corePoints[i] = vec(
+            core.x + G.CORE_RADIUS * Math.cos(rotation + Math.PI/2 * i),
+            core.y + G.CORE_RADIUS * Math.sin(rotation + Math.PI/2 * i),
         );
     }
     ctx.strokeStyle = "#887";
     ctx.lineWidth = 5;
     ctx.beginPath();
-    ctx.moveTo(core[0].x, core[0].y);
-    ctx.lineTo(core[1].x, core[1].y);
-    ctx.lineTo(core[2].x, core[2].y);
-    ctx.lineTo(core[3].x, core[3].y);
+    ctx.moveTo(corePoints[0].x, corePoints[0].y);
+    ctx.lineTo(corePoints[1].x, corePoints[1].y);
+    ctx.lineTo(corePoints[2].x, corePoints[2].y);
+    ctx.lineTo(corePoints[3].x, corePoints[3].y);
     ctx.closePath();
     ctx.stroke();
 
@@ -113,22 +132,14 @@ function draw() {
         planets[i].rotation += planets[i].rotationSpd;
 
         const pPos = vec(
-            cursor.x + (64 + i * 32) * Math.cos(planets[i].rotation),
-            cursor.y + (64 + i * 32) * Math.sin(planets[i].rotation)
+            core.x + (64 + i * G.PLANET_DISTANCE) * Math.cos(planets[i].rotation),
+            core.y + (64 + i * G.PLANET_DISTANCE) * Math.sin(planets[i].rotation)
         );
 
         ctx.beginPath();
         ctx.arc(pPos.x, pPos.y, planets[i].size, 0, Math.PI*2);
         ctx.stroke();
     };
-    
-    // ctx.beginPath();
-    // ctx.fillStyle = "#ff0000";
-    // ctx.rect(0, 0, canvas.width, canvas.height);
-    // // ctx.lineWidth = 10;
-    // ctx.strokeStyle = "#00ff00";
-    // ctx.stroke();
-    // ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 /**
@@ -149,4 +160,15 @@ function randomWithRange(min, max) {
  */
  function vec(_x, _y) {
     return { x: _x, y: _y };
+}
+
+/**
+ * 
+ * @param {number} start 
+ * @param {number} end 
+ * @param {number} amt 
+ * @returns 
+ */
+function lerp (start, end, amt){
+    return (1-amt)*start+amt*end
 }
