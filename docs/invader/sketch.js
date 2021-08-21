@@ -12,8 +12,8 @@ const G = {
     BULLET_WEIGHT: 0.02,
     MUZZLE_OFFSET: 0.001,
     COLLISION_DIST: 0.05,
-    EXPLOSION_SIZE_FINAL_MIN: 0.12,
-    EXPLOSION_SIZE_FINAL_MAX: 0.32,
+    EXPLOSION_SIZE_FINAL_MIN: 0.1,
+    EXPLOSION_SIZE_FINAL_MAX: 0.3,
     EXPLOSION_WEIGHT_INIT: 0.1,
     EXPLOSION_WEIGHT_CHANGE: -0.09,
     EXPLOSION_FRAGMENT_SIZE: 0.1
@@ -187,8 +187,8 @@ function draw() {
         e.size = lerp(e.size, e.sizeFinal, 0.3);
         e.weight = easeInQuart(
             e.size,
-            size.s * G.EXPLOSION_WEIGHT_INIT,
-            size.s * G.EXPLOSION_WEIGHT_CHANGE,
+            size.l * G.EXPLOSION_WEIGHT_INIT,
+            size.l * G.EXPLOSION_WEIGHT_CHANGE,
             e.sizeFinal
         )
         drawExplosion(e);
@@ -272,12 +272,8 @@ function drawExplosion(e) {
  * @param {Defender} d 
  */
 function drawDefender(d) {
-    // noFill();
-    // strokeWeight(2);
-    // stroke('#ddd');
     noStroke();
     fill("#ddd");
-    // const iSize = size.s * 0.03;
     const top = {x: d.pos.x, y: d.pos.y - d.size};
     const bL = {x: d.pos.x - d.size, y: d.pos.y + d.size/2};
     const bR = {x: d.pos.x + d.size, y: d.pos.y + d.size/2};
