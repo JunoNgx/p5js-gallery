@@ -3,13 +3,14 @@ const G = {
     SPAWN_COOLDOWN_MAX: 60,
     REST_MIN: 30,
     REST_MAX: 90,
-    INVADER_SPEED: 0.001,
+    INVADER_SPEED: 0.003,
     DEFENDER_LERP_AMT: 0.3,
     TARGET_Y_THRESHOLD: 0.6,
-    BULLET_SPEED: 0.1,
+    BULLET_SPEED: 0.07,
     BULLET_LENGTH: 0.05,
     BULLET_WEIGHT: 0.02,
-    MUZZLE_OFFSET: 0.001
+    MUZZLE_OFFSET: 0.001,
+    COLLISION_DIST: 0.05
 };
 /** @type { {s: number, l: number} } */
 let size;
@@ -143,6 +144,14 @@ function draw() {
 
     bullets = bullets.filter((b) => {
         b.pos.y -= size.s * G.BULLET_SPEED;
+
+        invaders.forEach(i => {
+            if (b.pos.dist(i.pos) < size.s * G.COLLISION_DIST) {
+                i.isDestroyed = true;
+                b.isDestroyed = true;
+            }
+        });
+
         drawBullet(b);
 
         return !b.isDestroyed;
@@ -241,7 +250,7 @@ function seekTarget(d, invaders) {
     // if (invaders.length === 0) return false;
     // else if (invaders.length === 1 && invaders[0].hasBeenMarked) return false;
     let potentialTargets = invaders.filter(i => {
-        return 0 < i.pos.y
+        return windowHeight * 0.1 < i.pos.y
             && i.pos.y < windowHeight * G.TARGET_Y_THRESHOLD
             && !i.hasBeenMarked
     });
@@ -254,8 +263,8 @@ function seekTarget(d, invaders) {
     d.destPos = createVector(
         target.pos.x,
         random(
-            target.pos.y + size.s * 0.01,
-            windowHeight * G.TARGET_Y_THRESHOLD
+            target.pos.y + size.s * 0.1,
+            windowHeight * 0.9
         )
     );
 
