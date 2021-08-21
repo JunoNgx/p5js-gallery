@@ -10,9 +10,11 @@ const G = {
     BULLET_WEIGHT: 0.02,
     MUZZLE_OFFSET: 0.001,
     COLLISION_DIST: 0.05,
-    EXPLOSION_SIZE_FINAL: 0.3,
+    EXPLOSION_SIZE_FINAL_MIN: 0.15,
+    EXPLOSION_SIZE_FINAL_MAX: 0.35,
     EXPLOSION_WEIGHT_INIT: 0.1,
     EXPLOSION_WEIGHT_CHANGE: -0.09,
+    EXPLOSION_FRAGMENT_SIZE: 0.1
 };
 /** @type { {s: number, l: number} } */
 let size;
@@ -64,6 +66,7 @@ let bullets;
  * @typedef {{
  * pos: import("p5").Vector,
  * size: number,
+ * sizeFinal: number
  * weight: number
  * }} Explosion
  */
@@ -172,16 +175,16 @@ function draw() {
     });
 
     explosions = explosions.filter((e) => {
-        e.size = lerp(e.size, size.s * G.EXPLOSION_SIZE_FINAL, 0.3);
+        e.size = lerp(e.size, e.sizeFinal, 0.3);
         e.weight = easeInQuart(
             e.size,
             size.s * G.EXPLOSION_WEIGHT_INIT,
             size.s * G.EXPLOSION_WEIGHT_CHANGE,
-            size.s * G.EXPLOSION_SIZE_FINAL
+            e.sizeFinal
         )
         drawExplosion(e);
 
-        return size.s*G.EXPLOSION_SIZE_FINAL - e.size > 2;
+        return e.sizeFinal - e.size > 2;
     });
     
     // DEBUG
@@ -240,10 +243,18 @@ function drawExplosion(e) {
     noFill();
     rectMode(RADIUS);
     stroke("#ff007a");
-    // strokeWeight((size.s * G.EXPLOSION_SIZE_FINAL) / (e.size));
     strokeWeight(e.weight);
     console.log(e.size);
     rect(e.pos.x, e.pos.y, e.size, e.size);
+
+    for (let i = 0; i < 4; i++) {
+        rect(
+            e.pos.x + e.size * 1.5 * Math.cos(Math.PI/2 * i),
+            e.pos.y + e.size * 1.5 * Math.sin(Math.PI/2 * i),
+            size.s*G.EXPLOSION_FRAGMENT_SIZE/e.size,
+            size.s*G.EXPLOSION_FRAGMENT_SIZE/e.size,
+        )
+    }
 }
 
 // ======== Defenders
@@ -287,6 +298,7 @@ function explode(_x, _y) {
     explosions.push({
         pos: createVector(_x, _y),
         size: 1,
+        sizeFinal: size.s * random(G.EXPLOSION_SIZE_FINAL_MIN, G.EXPLOSION_SIZE_FINAL_MAX),
         weight: size.s * G.EXPLOSION_WEIGHT_INIT
     })
 }
