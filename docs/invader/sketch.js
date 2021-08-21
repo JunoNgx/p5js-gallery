@@ -2,7 +2,8 @@ const G = {
     SPAWN_COOLDOWN_MIN: 20,
     SPAWN_COOLDOWN_MAX: 60,
     REST_MIN: 30,
-    REST_MAX: 90
+    REST_MAX: 90,
+    INVADER_SPEED: 0.001
 };
 /** @type { {s: number, l: number} } */
 let size;
@@ -102,7 +103,16 @@ function draw() {
         // circle(d.pos.x, d.pos.y, 12);
         drawDefender(d);
     });
+
+    invaders.forEach((i) => {
+        i.pos.y += size.s * G.INVADER_SPEED;
+
+        drawInvader(i);
+    });
     
+    noStroke();
+    fill('#fff');
+    text(invaders.length, 50, 50);
 }
 
 function spawnInvader() {
@@ -122,10 +132,24 @@ function drawDefender(d) {
     noFill();
     strokeWeight(2);
     stroke('#ddd');
+    const iSize = size.s * 0.03;
+    const top = {x: d.pos.x, y: d.pos.y - iSize};
+    const bL = {x: d.pos.x - iSize, y: d.pos.y + iSize/2};
+    const bR = {x: d.pos.x + iSize, y: d.pos.y + iSize/2};
+    triangle(top.x, top.y, bL.x, bL.y, bR.x, bR.y);
+}
+
+/**
+ * 
+ * @param {Invader} i 
+ */
+function drawInvader(i) {
+    fill("#CD5C5C");
+    noStroke();
     const dSize = size.s * 0.03;
-    const top = {x: d.pos.x, y: d.pos.y - dSize};
-    const bL = {x: d.pos.x - dSize, y: d.pos.y + dSize/2};
-    const bR = {x: d.pos.x + dSize, y: d.pos.y + dSize/2};
+    const top = {x: i.pos.x, y: i.pos.y + dSize};
+    const bL = {x: i.pos.x - dSize, y: i.pos.y - dSize/2};
+    const bR = {x: i.pos.x + dSize, y: i.pos.y - dSize/2};
     triangle(top.x, top.y, bL.x, bL.y, bR.x, bR.y);
 }
 
