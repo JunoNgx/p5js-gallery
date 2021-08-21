@@ -98,7 +98,6 @@ function draw() {
             cursor.y + G.CORE_RADIUS * Math.sin(rotation + Math.PI/2 * i),
         );
     }
-
     ctx.strokeStyle = "#887";
     ctx.lineWidth = 5;
     ctx.beginPath();
@@ -108,6 +107,21 @@ function draw() {
     ctx.lineTo(core[3].x, core[3].y);
     ctx.closePath();
     ctx.stroke();
+
+    // Drawing the sattlelites
+    for (let i = 0; i < planets.length; i++) {
+        planets[i].rotation += planets[i].rotationSpd;
+
+        const pPos = vec(
+            cursor.x + (64 + i * 32) * Math.cos(planets[i].rotation),
+            cursor.y + (64 + i * 32) * Math.sin(planets[i].rotation)
+        );
+
+        ctx.beginPath();
+        ctx.arc(pPos.x, pPos.y, planets[i].size, 0, Math.PI*2);
+        ctx.stroke();
+    };
+    
     // ctx.beginPath();
     // ctx.fillStyle = "#ff0000";
     // ctx.rect(0, 0, canvas.width, canvas.height);
