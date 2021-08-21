@@ -3,7 +3,9 @@ const G = {
     SPAWN_COOLDOWN_MAX: 60,
     REST_MIN: 30,
     REST_MAX: 90,
-    INVADER_SPEED: 0.001
+    INVADER_SPEED: 0.001,
+    DEFENDER_LERP_AMT: 0.5,
+    TARGET_Y_THRESHOLD: 0.6
 };
 /** @type { {s: number, l: number} } */
 let size;
@@ -15,11 +17,10 @@ let time;
 /** @typedef { number } DefenderState */
 /** @enum { DefenderState } */
 const DState = {
-    SEEKING: 1,
+    IDLE: 1,
     MOVING: 2,
     FIRING: 3,
     RESTING: 4,
-    IDLE: 5
 }
 
 /**
@@ -80,24 +81,31 @@ function draw() {
 
     defenders.forEach((d) => {
         switch (d.state) {
+            case DState.IDLE:
+                const hasFoundTarget = seekTarget(d, invaders);
+                if (hasFoundTarget) d.state = DState.MOVING;
+                break;
+
             case DState.MOVING:
-
+                d.pos.x = lerp(d.pos.x, d.destPos.x, G.DEFENDER_LERP_AMT);
+                d.pos.y = lerp(d.pos.y, d.destPos.y, G.DEFENDER_LERP_AMT);
+                if (d.pos.dist(d.destPos) < 0.5 ) {
+                    // d.pos.x = d.destPos.x;
+                    d.state = DState.FIRING;
+                }
                 break;
-            case DState.SEEKING:
 
-                break;
             case DState.FIRING:
-
+                fireShot(d);
+                d.restCooldown = random(G.REST_MIN, G.REST_MAX)
+                d.state = DState.RESTING;
                 break;
+
             case DState.RESTING:
                 d.restCooldown--;
                 if (d.restCooldown <= 0) {
                     d.state = DState.IDLE;
                 }
-                break;
-            case DState.IDLE:
-                const hasFoundTarget = seekTarget(d, invaders);
-                if (hasFoundTarget) d.state = DState.MOVING;
                 break;
         }
 
@@ -116,6 +124,8 @@ function draw() {
     text(invaders.length, 50, 50);
 }
 
+// ======== Invaders
+
 function spawnInvader() {
     const posX = random(windowWidth * 0.1, windowWidth * 0.9);
     const posY = random(windowHeight * -0.1, windowHeight * 0.0);
@@ -124,6 +134,22 @@ function spawnInvader() {
         hasBeenMarked: false
     });
 }
+
+/**
+ * 
+ * @param {Invader} i 
+ */
+ function drawInvader(i) {
+    fill("#CD5C5C");
+    noStroke();
+    const dSize = size.s * 0.03;
+    const top = {x: i.pos.x, y: i.pos.y + dSize};
+    const bL = {x: i.pos.x - dSize, y: i.pos.y - dSize/2};
+    const bR = {x: i.pos.x + dSize, y: i.pos.y - dSize/2};
+    triangle(top.x, top.y, bL.x, bL.y, bR.x, bR.y);
+}
+
+// ======== Defenders
 
 /**
  * 
@@ -145,17 +171,13 @@ function drawDefender(d) {
 
 /**
  * 
- * @param {Invader} i 
+ * @param {Defender} d 
  */
-function drawInvader(i) {
-    fill("#CD5C5C");
-    noStroke();
-    const dSize = size.s * 0.03;
-    const top = {x: i.pos.x, y: i.pos.y + dSize};
-    const bL = {x: i.pos.x - dSize, y: i.pos.y - dSize/2};
-    const bR = {x: i.pos.x + dSize, y: i.pos.y - dSize/2};
-    triangle(top.x, top.y, bL.x, bL.y, bR.x, bR.y);
+function fireShot(d) {
+
 }
+
+// ======== Misc
 
 /**
  * Set a random suitable Invader as a target for the Defender
@@ -165,14 +187,18 @@ function drawInvader(i) {
  */
 function seekTarget(d, invaders) {
 
-    if (invaders.length === 0) return false;
-    else if (invaders.length === 1 && invaders[0].hasBeenMarked) return false;
+    // if (invaders.length === 0) return false;
+    // else if (invaders.length === 1 && invaders[0].hasBeenMarked) return false;
+    let potentialTargets = invaders.filter(i => {
+        return 0 < i.pos.y
+            && i.pos.y < windowHeight * G.TARGET_Y_THRESHOLD
+            && !i.hasBeenMarked
+    });
+
+    if (potentialTargets.length === 0) return false;
 
     /** @type {Invader} */
-    let target = random(invaders);
-    while (target.hasBeenMarked || target.pos.y > windowHeight * 0.6) {
-        target = random(invaders);
-    } 
+    let target = random(potentialTargets);
     target.hasBeenMarked = true;
     d.destPos = createVector(target.pos.x, target.pos.y);
 
