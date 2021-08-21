@@ -9,14 +9,14 @@ const G = {
     DEFENDER_SIZE_ENLARGED: 0.07,
     BULLET_SPEED: 0.07,
     BULLET_LENGTH: 0.05,
-    BULLET_WEIGHT: 0.02,
+    BULLET_WEIGHT: 0.04,
     MUZZLE_OFFSET: 0.001,
     COLLISION_DIST: 0.05,
     EXPLOSION_SIZE_FINAL_MIN: 0.1,
     EXPLOSION_SIZE_FINAL_MAX: 0.3,
     EXPLOSION_WEIGHT_INIT: 0.1,
-    EXPLOSION_WEIGHT_CHANGE: -0.09,
-    EXPLOSION_FRAGMENT_SIZE: 0.1
+    EXPLOSION_WEIGHT_CHANGE: -0.1,
+    EXPLOSION_FRAGMENT_SIZE: 0.005
 };
 /** @type { {s: number, l: number} } */
 let size;
@@ -136,7 +136,6 @@ function draw() {
                 d.pos.x = lerp(d.pos.x, d.destPos.x, G.DEFENDER_LERP_AMT);
                 d.pos.y = lerp(d.pos.y, d.destPos.y, G.DEFENDER_LERP_AMT);
                 if (d.pos.dist(d.destPos) < 0.1 ) {
-                    // d.pos.x = d.destPos.x;
                     d.state = DState.FIRING;
                 }
                 break;
@@ -156,7 +155,6 @@ function draw() {
                 break;
         }
 
-        // circle(d.pos.x, d.pos.y, 12);
         drawDefender(d);
     });
 
@@ -240,8 +238,6 @@ function drawBullet(b) {
     strokeWeight(size.s * G.BULLET_WEIGHT);
     line( b.pos.x, b.pos.y + bSize,
         b.pos.x, b.pos.y - bSize);
-
-    // circle(b.pos.x, b.pos.y, 12)
 }
 
 /**
@@ -257,8 +253,8 @@ function drawExplosion(e) {
 
     for (let i = 0; i < 4; i++) {
         rect(
-            e.pos.x + e.size * 1.5 * Math.cos(Math.PI/2 * i),
-            e.pos.y + e.size * 1.5 * Math.sin(Math.PI/2 * i),
+            e.pos.x + e.size * 1.75 * Math.cos(Math.PI/2 * i),
+            e.pos.y + e.size * 1.75 * Math.sin(Math.PI/2 * i),
             size.s*G.EXPLOSION_FRAGMENT_SIZE/e.size,
             size.s*G.EXPLOSION_FRAGMENT_SIZE/e.size,
         )
