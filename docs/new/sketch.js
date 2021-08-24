@@ -36,6 +36,7 @@ function setup() {
     rects = [];
     createRect(0, 0, 1, 1, 1);
     noLoop();
+    console.log(rects);
 }
 
 function draw() {
@@ -83,6 +84,7 @@ function createRect(_x, _y, _sizeX, _sizeY, _childRate) {
     // }
 
     if (random() < _childRate) {
+        
         let cSize = { x: 0, y: 0};
 
         const isInheritingX = random() < 0.5;
@@ -93,6 +95,11 @@ function createRect(_x, _y, _sizeX, _sizeY, _childRate) {
         } else {
             cSize.x = random(_sizeX * 0.3, _sizeX * 0.8);
             cSize.y = _sizeY; // Using parent's
+        }
+
+        if (cSize.x <= G.BORDER_WIDTH * 2
+            || cSize.y <= G.BORDER_WIDTH * 2) {
+            return;
         }
 
         // if (_sizeX > _sizeX) {
