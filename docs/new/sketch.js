@@ -1,7 +1,7 @@
 const G = {
-    SQUARE_SIZE_X: 0.05,
-    SQUARE_SIZE_Y: 0.05,
-    SQUARE_GAP: 0.02
+    SQUARE_SIZE_X: 0.04,
+    SQUARE_SIZE_Y: 0.04,
+    SQUARE_GAP: 0.01
 };
 /** @type { {s: number, l: number} } */
 let size;
@@ -74,9 +74,19 @@ function draw() {
 
     rectMode(CENTER);
     squares.forEach( s => {
+
+        const dist = s.pos.dist(createVector(mouseX, mouseY));
+        let sizeRate = (dist < size.l * 0.2)
+            ? (0.1 + 0.9 * (dist / (size.l * 0.2)))
+            : 1;
+
+
         fill(44);
         // rect(s.pos.x, s.pos.y, size.l * (G.SQUARE_SIZE + G.SQUARE_GAP), size.l * (G.SQUARE_SIZE + G.SQUARE_GAP));
-        rect(s.pos.x, s.pos.y, s.size.x, s.size.y);
-        circle(s.pos.x, s.pos.y, 12);
+        rect(s.pos.x, s.pos.y, s.size.x * sizeRate, s.size.y * sizeRate);
+        // ellipse(s.pos.x, s.pos.y, s.size.x * sizeRate, s.size.y * sizeRate);
+        // circle(s.pos.x, s.pos.y, 12);
+        fill(255);
+        // text(0.5 * (dist / size.l * 0.2), s.pos.x, s.pos.y);
     });
 }
