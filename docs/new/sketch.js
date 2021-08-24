@@ -1,7 +1,7 @@
 const G = {
     BORDER_WIDTH: 0.01,
     // CORNER_RADIUS: 0.05,
-    MAX_CHILDREN: 3
+    MAX_CHILDREN: 2
 };
 /** @type { {s: number, l: number} } */
 let size;
@@ -47,7 +47,11 @@ function draw() {
         stroke(47);
         strokeWeight(size.l * G.BORDER_WIDTH);
         fill(r.col);
-        rect(r.pos.x, r.pos.y, r.size.x * windowWidth, r.size.y * windowHeight,
+        rect(
+            r.pos.x * windowWidth,
+            r.pos.y * windowHeight,
+            r.size.x * windowWidth,
+            r.size.y * windowHeight
             // size.l * G.BORDER_WIDTH);
         );
     });
@@ -84,40 +88,80 @@ function createRect(_x, _y, _sizeX, _sizeY, _childRate) {
     // }
 
     if (random() < _childRate) {
-        
-        let cSize = { x: 0, y: 0};
-
+        // const childrenAmt = 1+ Math.floor(random() * G.MAX_CHILDREN);
         const isInheritingX = random() < 0.5;
+        // let remainingPortion = 1;
+        // let remainingAmtOfChildren = childrenAmt;
 
-        if (isInheritingX) { //inherits sizeX
-            cSize.x = _sizeX;
-            cSize.y = random(_sizeY * 0.3, _sizeY * 0.8);
-        } else {
-            cSize.x = random(_sizeX * 0.3, _sizeX * 0.8);
-            cSize.y = _sizeY; // Using parent's
-        }
+        // for (let i = 0; i < childrenAmt; i++) {
+            let cPos = { x: _x, y: _y};
+            let cSize = { x: 0, y: 0};
 
-        if (cSize.x <= G.BORDER_WIDTH * 2
-            || cSize.y <= G.BORDER_WIDTH * 2) {
-            return;
-        }
+            if (isInheritingX) { //inherits sizeX
+                cSize.x = _sizeX;
+                cSize.y = random(_sizeY * 0.4, _sizeY * 0.75);
+                // remainingPortion -= cSize.y;
+                // cPos.y += cSize.y + G.BORDER_WIDTH;
+            } else {
+                cSize.x = random(_sizeX * 0.4, _sizeX * 0.75);
+                cSize.y = _sizeY; // Using parent's
+                // remainingPortion -= cSize.x;
+                // cPos.x += cSize.x + G.BORDER_WIDTH;
+            }
 
-        // if (_sizeX > _sizeX) {
-        //     cSize.x = random(_sizeX * 0.1, _sizeX * 0.8);
-        //     cSize.y = _sizeY; // Using parent's
-        // } else {
-        //     cSize.x = _sizeX;
-        //     cSize.y = random(_sizeY * 0.1, _sizeY * 0.8);
+            if (cSize.x <= G.BORDER_WIDTH * 4
+                || cSize.y <= G.BORDER_WIDTH * 4) {
+                console.log("Cancelled out of small amount");
+                return;
+            }
+            createRect(
+                cPos.x,
+                cPos.y,
+                cSize.x,
+                cSize.y,
+                _childRate * 0.95
+            );
+
+            // remainingAmtOfChildren--;
         // }
-
-        createRect(
-            // (isInheritingX) ? _x : _x + size.l * G.BORDER_WIDTH,
-            // _y + size.l * G.BORDER_WIDTH,
-            _x,
-            _y,
-            cSize.x,
-            cSize.y,
-            _childRate * 0.9
-        );
     }
+
+    // if (random() < _childRate) {
+    //     const childrenAmt = 1+ Math.floor(random() * G.MAX_CHILDREN);
+    //     const isInheritingX = random() < 0.5;
+    //     let remainingPortion = 1;
+    //     let remainingAmtOfChildren = childrenAmt;
+
+    //     for (let i = 0; i < childrenAmt; i++) {
+    //         let cPos = { x: _x, y: _y};
+    //         let cSize = { x: 0, y: 0};
+
+    //         if (isInheritingX) { //inherits sizeX
+    //             cSize.x = _sizeX;
+    //             cSize.y = random(_sizeY * 0.2, _sizeY * (remainingPortion - (0.2 + G.BORDER_WIDTH) * remainingAmtOfChildren));
+    //             remainingPortion -= cSize.y;
+    //             cPos.y += cSize.y + G.BORDER_WIDTH;
+    //         } else {
+    //             cSize.x = random(_sizeX * 0.2, _sizeX * (remainingPortion - (0.2 + G.BORDER_WIDTH) * remainingAmtOfChildren));
+    //             cSize.y = _sizeY; // Using parent's
+    //             remainingPortion -= cSize.x;
+    //             cPos.x += cSize.x + G.BORDER_WIDTH;
+    //         }
+
+    //         if (cSize.x <= G.BORDER_WIDTH * 5
+    //             || cSize.y <= G.BORDER_WIDTH * 5) {
+    //             console.log("Cancelled out of small amount");
+    //             return;
+    //         }
+    //         createRect(
+    //             cPos.x,
+    //             cPos.y,
+    //             cSize.x,
+    //             cSize.y,
+    //             _childRate * 0.9
+    //         );
+
+    //         remainingAmtOfChildren--;
+    //     }
+    // }
 }
