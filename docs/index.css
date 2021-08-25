@@ -3,7 +3,7 @@ body {
   background: #444;
   font-family: "Bitter", "serif";
   color: #ccc;
-  max-width: 1024px;
+  max-width: 1280px;
   margin: auto;
   hyphens: auto;
   line-height: 1.5;
@@ -13,19 +13,52 @@ body {
 .banner {
   background-color: #CD5C5C;
   color: #eee;
-  height: 15rem;
+  height: 18rem;
 }
 .banner__text {
   text-align: center;
   margin: auto;
+  padding: 1rem;
 }
 .banner__text__header {
   padding-top: 3rem;
 }
 
 .intro {
+  padding: 1rem;
   max-width: 512px;
   margin: auto;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 4rem;
+}
+.gallery__item {
+  flex-grow: 1;
+  background-color: #666;
+  border-radius: 0.5rem;
+  margin: 0 0.5rem 5rem 0.5rem;
+  max-width: 300px;
+  padding: 0.5rem;
+}
+.gallery__item__thumbnail {
+  width: 100%;
+}
+.gallery__item__title, .gallery__item__desc {
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+}
+.gallery__item__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.gallery__item__desc {
+  font-size: 0.8rem;
 }
 
 .footer {
