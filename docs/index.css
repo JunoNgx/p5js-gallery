@@ -9,6 +9,15 @@ body {
   line-height: 1.5;
   padding: 0;
 }
+body a {
+  color: #CD5C5C;
+}
+body a:visited {
+  color: #00b8b1;
+}
+body a:hover {
+  color: #0077ff;
+}
 
 .banner {
   background-color: #CD5C5C;

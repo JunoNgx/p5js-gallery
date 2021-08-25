@@ -3,7 +3,8 @@
 $pri-col: #ccc;
 $bac-col: #444;
 $acc-col: #CD5C5C;
-// $acc-col: #00b8b1;
+$alt-acc-col: #00b8b1;
+$alt-acc-col-2: #0077ff;
 
 body {
     background: $bac-col;
@@ -14,6 +15,15 @@ body {
     hyphens: auto;
     line-height: 1.5;
     padding: 0;
+    a {
+        color: $acc-col;
+        &:visited {
+            color: $alt-acc-col;
+        }
+        &:hover {
+            color: $alt-acc-col-2;
+        }
+    }
 }
 
 .banner {
