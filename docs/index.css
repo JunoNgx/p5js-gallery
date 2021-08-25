@@ -11,7 +11,8 @@ body {
 }
 
 .banner {
-  background-color: grey;
+  background-color: #CD5C5C;
+  color: #eee;
   height: 15rem;
 }
 .banner__text {

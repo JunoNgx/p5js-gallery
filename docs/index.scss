@@ -3,6 +3,7 @@
 $pri-col: #ccc;
 $bac-col: #444;
 $acc-col: #CD5C5C;
+// $acc-col: #00b8b1;
 
 body {
     background: $bac-col;
@@ -16,7 +17,8 @@ body {
 }
 
 .banner {
-    background-color: grey;
+    background-color: $acc-col;
+    color: #eee;
     height: 15rem;
     &__text {
         text-align: center;
