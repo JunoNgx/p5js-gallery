@@ -11,7 +11,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "watch": "light-server -s docs -w \"docs/**/*.js # # reload\""
+    "watch_js": "light-server -s docs -w \"docs/**/*.js # # reload\"",
+    "watch_html": "light-server -s docs -w \"docs/*.scss, docs/index.html # # reload\""
   },
   "author": "Juno Nguyen",
   "license": "MIT"

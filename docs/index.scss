@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Bitter&display=swap');
+
+$pri-col: #ccc;
+$bac-col: #444;
+$acc-col: #CD5C5C;
+$alt-acc-col: #00b8b1;
+$alt-acc-col-2: #0077ff;
+
+body {
+    background: $bac-col;
+    font-family: 'Bitter', 'serif';
+    color: #ccc;
+    max-width: 1280px;
+    margin: auto;
+    hyphens: auto;
+    line-height: 1.5;
+    padding: 0;
+    a {
+        color: $acc-col;
+        &:visited {
+            color: $alt-acc-col;
+        }
+        &:hover {
+            color: $alt-acc-col-2;
+        }
+    }
+}
+
+.banner {
+    background-color: $acc-col;
+    color: #eee;
+    height: 18rem;
+    &__text {
+        text-align: center;
+        margin: auto;
+        padding: 1rem;
+        &__header {
+            padding-top: 3rem;
+        }
+        // &__subtitle {
+        // }
+    }
+}
+
+.intro {
+    padding: 1rem;
+    max-width: 512px;
+    margin: auto;
+}
+
+.gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 4rem;
+    &__item {
+        flex-grow: 1;
+        border: #666 2px solid;
+        background-color: #666;
+        border-radius: 0.5rem;
+        margin: 0 0.5rem 5rem 0.5rem;
+        max-width: 300px;
+        padding: 0.5rem;
+        box-shadow: 0.25rem 0.5rem #333;
+        transition:
+            transform ease-in 200ms,
+            border ease-in 500ms,
+            box-shadow ease-in 300ms
+            ;
+        &:hover {
+            transform: translateY(-2rem) rotate(4deg);
+            border: $pri-col 2px solid;
+            box-shadow: 1rem 2rem #333;
+        }
+
+        &__thumbnail {
+            width: 100%;
+        }
+        &__title, &__desc {
+            // margin: 0;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+        }
+        &__title {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        &__desc {
+            font-size: 0.8rem;
+        }
+    }
+}
+
+.footer {
+    padding: 2rem;
+    margin: auto;
+    text-align: center;
+}
