@@ -46,6 +46,9 @@ body a:hover {
   align-items: center;
   margin-top: 4rem;
 }
+.gallery a {
+  text-decoration: none;
+}
 .gallery__item {
   flex-grow: 1;
   border: #666 2px solid;

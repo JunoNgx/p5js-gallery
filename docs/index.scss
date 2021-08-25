@@ -37,8 +37,6 @@ body {
         &__header {
             padding-top: 3rem;
         }
-        // &__subtitle {
-        // }
     }
 }
 
@@ -54,6 +52,7 @@ body {
     justify-content: space-around;
     align-items: center;
     margin-top: 4rem;
+    a {text-decoration: none;}
     &__item {
         flex-grow: 1;
         border: #666 2px solid;
@@ -78,7 +77,6 @@ body {
             width: 100%;
         }
         &__title, &__desc {
-            // margin: 0;
             line-height: 1;
             color: #fff;
             text-align: center;
