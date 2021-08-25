@@ -52,7 +52,9 @@ body {
     justify-content: space-around;
     align-items: center;
     margin-top: 4rem;
-    a {text-decoration: none;}
+    a {
+        text-decoration: none;
+    }
     &__item {
         flex-grow: 1;
         border: #666 2px solid;
