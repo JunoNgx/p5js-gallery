@@ -22,15 +22,16 @@ body a:hover {
 .banner {
   background-color: #CD5C5C;
   color: #eee;
-  height: 18rem;
+  height: 20rem;
 }
 .banner__text {
   text-align: center;
   margin: auto;
-  padding: 1rem;
+  padding: 2rem;
 }
 .banner__text__header {
-  padding-top: 3rem;
+  padding-top: 1rem;
+  font-size: 3rem;
 }
 
 .intro {
