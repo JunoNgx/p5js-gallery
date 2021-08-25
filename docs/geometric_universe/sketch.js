@@ -2,8 +2,13 @@ const G = {
     VERTEX_CHOICES: [3, 4, 5, 64],
     SHAPE_RADIUS_MIN: 0.01,
     SHAPE_RADIUS_MAX: 0.07,
-    OFFSET_VARIANCE: 0.1,
+    SHAPE_OFFSET_VARIANCE: 0.1,
+    LINE_OFFSET_VARIANCE: 0.2,
+    LINE_LENGTH_MIN: 0.3,
+    LINE_LENGTH_MAX: 0.8,
     CORE_RADIUS: 0.3,
+    AMT_OF_SHAPES: 32,
+    AMT_OF_LINES: 12
 };
 /** @type { {s: number, l: number} } */
 let size;
@@ -22,6 +27,15 @@ let mid;
 /** @type { Shape [] } */
 let shapes;
 
+/**
+ * @typedef {{
+ * pos: import("p5").Vector,
+ * length: number
+ * }} Line
+ */
+/** @type { Line [] } */
+let lines;
+
 function setup() {
     size = {
         l: (windowWidth >= windowHeight) ? windowWidth : windowHeight,
@@ -31,13 +45,13 @@ function setup() {
     // time = 0;
 
     shapes = [];
-    const noOfShapes = 24;
-    for (let i = 0; i < noOfShapes; i++) {
+    // const noOfShapes = 24;
+    for (let i = 0; i < G.AMT_OF_SHAPES; i++) {
 
-        const posX = mid.x + (size.s * G.CORE_RADIUS) * cos(Math.PI*2/noOfShapes * i)
-            + size.s * random(-G.OFFSET_VARIANCE, G.OFFSET_VARIANCE);
-        const posY = mid.y + (size.s * G.CORE_RADIUS) * sin(Math.PI*2/noOfShapes * i)
-            + size.s * random(-G.OFFSET_VARIANCE, G.OFFSET_VARIANCE);
+        const posX = mid.x + (size.s * G.CORE_RADIUS) * cos(Math.PI*2/G.AMT_OF_SHAPES * i)
+            + size.s * random(-G.SHAPE_OFFSET_VARIANCE, G.SHAPE_OFFSET_VARIANCE);
+        const posY = mid.y + (size.s * G.CORE_RADIUS) * sin(Math.PI*2/G.AMT_OF_SHAPES * i)
+            + size.s * random(-G.SHAPE_OFFSET_VARIANCE, G.SHAPE_OFFSET_VARIANCE);
         
         shapes.push({
             pos: createVector(
@@ -47,6 +61,20 @@ function setup() {
             vertexCount: random(G.VERTEX_CHOICES),
             radius: size.s * random(G.SHAPE_RADIUS_MIN, G.SHAPE_RADIUS_MAX)
         })
+    }
+
+    lines = [];
+    // const noOfLines = 
+    for (let i = 0; i < G.AMT_OF_LINES; i++) {
+        const posX = mid.x + size.s
+            * random(-G.LINE_OFFSET_VARIANCE, G.LINE_OFFSET_VARIANCE);
+        const posY = mid.y + size.s
+            * random(-G.LINE_OFFSET_VARIANCE, G.LINE_OFFSET_VARIANCE);
+
+        lines.push({
+            pos: createVector(posX, posY),
+            length: random(G.LINE_LENGTH_MIN, G.LINE_LENGTH_MAX)
+        });
     }
 
     createCanvas(windowWidth, windowHeight);
@@ -69,6 +97,22 @@ function draw() {
             size.s * 0.01
         );
     }
+
+    stroke(47);
+    strokeWeight(4);
+    lines.forEach(l => {
+        // circle(l.pos.x, l.pos.y, 12);
+        line(
+            l.pos.x + l.length/2 * size.s * Math.cos(-PI/4),
+            l.pos.y + l.length/2 * size.s * Math.sin(-PI/4),
+            l.pos.x + l.length/2 * size.s * Math.cos(-PI/4 + PI),
+            l.pos.y + l.length/2 * size.s * Math.sin(-PI/4 + PI),
+        );
+        // line(12
+        //     ,12,
+        //     500,
+        //     500);
+    });
 
     noFill();
     strokeWeight(2);
