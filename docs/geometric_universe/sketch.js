@@ -1,7 +1,8 @@
 const G = {
     VERTEX_CHOICES: [3, 4, 5, 64],
     RADIUS_MIN: 0.02,
-    RADIUS_MAX: 0.1
+    RADIUS_MAX: 0.1,
+    CORE_RADIUS: 0.3,
 };
 /** @type { {s: number, l: number} } */
 let size;
@@ -46,6 +47,20 @@ function setup() {
 
 function draw() {
     background(224);
+
+    // fill(47);
+    // stroke(47);
+    // circle(mid.x, mid.y, 36);
+
+    fill(47);
+    noStroke();
+    for (let i = 0; i < 32; i++) {
+        circle(
+            mid.x + (size.s * G.CORE_RADIUS) * cos(Math.PI / 16 * i),
+            mid.y + (size.s * G.CORE_RADIUS) * sin(Math.PI / 16 * i),
+            size.s * 0.02
+        );
+    }
 
     noFill();
     strokeWeight(2);
