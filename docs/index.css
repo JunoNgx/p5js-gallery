@@ -39,11 +39,18 @@ body {
 }
 .gallery__item {
   flex-grow: 1;
+  border: #666 2px solid;
   background-color: #666;
   border-radius: 0.5rem;
   margin: 0 0.5rem 5rem 0.5rem;
   max-width: 300px;
   padding: 0.5rem;
+  transition: transform ease-in 200ms, border ease-in 500ms, box-shadow ease-in 300ms;
+}
+.gallery__item:hover {
+  transform: translateY(-2rem) rotate(4deg);
+  border: #ccc 2px solid;
+  box-shadow: 1rem 2rem #333;
 }
 .gallery__item__thumbnail {
   width: 100%;
@@ -62,7 +69,8 @@ body {
 }
 
 .footer {
-  margin: 3rem auto 3rem auto;
+  padding: 2rem;
+  margin: 3rem auto 0 auto;
   text-align: center;
 }
 
