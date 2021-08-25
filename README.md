@@ -15,7 +15,7 @@ In other words, this is a strictly recreational project I pursue entirely for pe
 This project is deployed via GitHub Page at https://junongx.github.io/p5js-gallery/, which also contains an index of my works.
 ## Structure
 
-This project is setup with [JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) and [p5-types](https://github.com/p5-types/p5.ts) for type checking and `light-server` local deployment.
+This project is setup with [JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) and [p5-types](https://github.com/p5-types/p5.ts) for type checking and `light-server` for local deployment.
 
 The works included in this project are stored in the folder `docs` to facilitate the use of GitHub Page. Each project is separated in a sub-folder, though they share the use of the library files in `/docs`.
 
@@ -25,4 +25,4 @@ The works included in this project are stored in the folder `docs` to facilitate
 2. Change directory to the repository `cd p5js-gallery`
 3. Setup `npm install`
 4. Run the `light-server` with the script `npm run watch_js` or `npm run watch_html`
-5. Open `http://localhost:4000/<piece-name>` with a web browser
+5. Open `http://localhost:4000/` with a web browser
