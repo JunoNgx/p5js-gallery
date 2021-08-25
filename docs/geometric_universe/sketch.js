@@ -1,7 +1,8 @@
 const G = {
     VERTEX_CHOICES: [3, 4, 5, 64],
-    RADIUS_MIN: 0.02,
-    RADIUS_MAX: 0.1,
+    SHAPE_RADIUS_MIN: 0.01,
+    SHAPE_RADIUS_MAX: 0.07,
+    OFFSET_VARIANCE: 0.1,
     CORE_RADIUS: 0.3,
 };
 /** @type { {s: number, l: number} } */
@@ -30,14 +31,21 @@ function setup() {
     // time = 0;
 
     shapes = [];
-    for (let i = 0; i < 50; i++) {
+    const noOfShapes = 24;
+    for (let i = 0; i < noOfShapes; i++) {
+
+        const posX = mid.x + (size.s * G.CORE_RADIUS) * cos(Math.PI*2/noOfShapes * i)
+            + size.s * random(-G.OFFSET_VARIANCE, G.OFFSET_VARIANCE);
+        const posY = mid.y + (size.s * G.CORE_RADIUS) * sin(Math.PI*2/noOfShapes * i)
+            + size.s * random(-G.OFFSET_VARIANCE, G.OFFSET_VARIANCE);
+        
         shapes.push({
             pos: createVector(
-                random(windowWidth * 0, windowWidth * 1),
-                random(windowHeight * 0, windowHeight * 1),
+                posX,
+                posY
             ),
             vertexCount: random(G.VERTEX_CHOICES),
-            radius: size.l * random(G.RADIUS_MIN, G.RADIUS_MAX)
+            radius: size.s * random(G.SHAPE_RADIUS_MIN, G.SHAPE_RADIUS_MAX)
         })
     }
 
@@ -56,9 +64,9 @@ function draw() {
     noStroke();
     for (let i = 0; i < 32; i++) {
         circle(
-            mid.x + (size.s * G.CORE_RADIUS) * cos(Math.PI / 16 * i),
-            mid.y + (size.s * G.CORE_RADIUS) * sin(Math.PI / 16 * i),
-            size.s * 0.02
+            mid.x + (size.s * G.CORE_RADIUS) * cos(Math.PI/16 * i),
+            mid.y + (size.s * G.CORE_RADIUS) * sin(Math.PI/16 * i),
+            size.s * 0.01
         );
     }
 
