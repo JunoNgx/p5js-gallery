@@ -59,9 +59,21 @@ function draw() {
 
         switch (s.vertexCount) {
             case 3:
-                polygon(s.pos.x, s.pos.y, s.radius, s.vertexCount);
+                const triLeft = createVector(
+                    s.pos.x + s.radius * cos(-PI*5/6),
+                    s.pos.y + s.radius * sin(-PI*5/6),
+                );
+                const triRight = createVector(
+                    s.pos.x + s.radius * cos(-PI/6),
+                    s.pos.y + s.radius * sin(-PI/6)
+                );
+                const triBottom = createVector(
+                    s.pos.x + s.radius * cos(PI/2),
+                    s.pos.y + s.radius * sin(PI/2)
+                );
+                triangle(triLeft.x, triLeft.y, triRight.x, triRight.y, triBottom.x, triBottom.y);
                 break;
-                
+
             case 4:
                 rectMode(RADIUS)
                 rect(s.pos.x, s.pos.y, s.radius, s.radius);
