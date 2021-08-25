@@ -14,8 +14,6 @@ const G = {
 let size;
 /** @type { import("p5").Vector } */
 let mid;
-// /** @type { number } */
-// let time;
 
 /**
  * @typedef {{
@@ -42,10 +40,8 @@ function setup() {
         s: (windowWidth <= windowHeight) ? windowWidth : windowHeight
     };
     mid = createVector(windowWidth * 0.5, windowHeight * 0.5);
-    // time = 0;
 
     shapes = [];
-    // const noOfShapes = 24;
     for (let i = 0; i < G.AMT_OF_SHAPES; i++) {
 
         const posX = mid.x + (size.s * G.CORE_RADIUS) * cos(Math.PI*2/G.AMT_OF_SHAPES * i)
@@ -64,7 +60,6 @@ function setup() {
     }
 
     lines = [];
-    // const noOfLines = 
     for (let i = 0; i < G.AMT_OF_LINES; i++) {
         const posX = mid.x + size.s
             * random(-G.LINE_OFFSET_VARIANCE, G.LINE_OFFSET_VARIANCE);
@@ -84,10 +79,6 @@ function setup() {
 function draw() {
     background(224);
 
-    // fill(47);
-    // stroke(47);
-    // circle(mid.x, mid.y, 36);
-
     fill(47);
     noStroke();
     for (let i = 0; i < 32; i++) {
@@ -101,28 +92,18 @@ function draw() {
     stroke(47);
     strokeWeight(4);
     lines.forEach(l => {
-        // circle(l.pos.x, l.pos.y, 12);
         line(
             l.pos.x + l.length/2 * size.s * Math.cos(-PI/4),
             l.pos.y + l.length/2 * size.s * Math.sin(-PI/4),
             l.pos.x + l.length/2 * size.s * Math.cos(-PI/4 + PI),
             l.pos.y + l.length/2 * size.s * Math.sin(-PI/4 + PI),
         );
-        // line(12
-        //     ,12,
-        //     500,
-        //     500);
     });
 
     noFill();
     strokeWeight(2);
     stroke(47);
     shapes.forEach(s => {
-        // push();
-        // translate(s.pos.x, s.pos.y);
-        // rotate(PI/2)
-        // polygon(s.pos.x, s.pos.y, s.radius, s.vertexCount);
-        // pop();
 
         switch (s.vertexCount) {
             case 3:
@@ -151,8 +132,6 @@ function draw() {
                 break;
         }
     });
-
-    // time++;
 }
 
 /**
