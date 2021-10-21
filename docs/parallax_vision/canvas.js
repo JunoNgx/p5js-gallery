@@ -29,6 +29,8 @@ class VisionCanvas {
     ctx;
     /** @type {Vector} */
     static cursor;
+    /** @type {Vector} */
+    static draggedCursor;
     /** @type {VisionNode []} */
     nodes;
     /**
@@ -55,8 +57,11 @@ class VisionCanvas {
         });
 
         VisionCanvas.cursor = {x: 0, y: 0};
+        VisionCanvas.draggedCursor = {x: 0, y: 0};
         window.addEventListener("mousemove", (e) => {
             const canvasRect = this.canvas.getBoundingClientRect();
+            // lerp(VisionCanvas.cursor.x, Math.round(e.clientX - canvasRect.left), 0.5);
+            // lerp(VisionCanvas.cursor.y, Math.round(e.clientY - canvasRect.top), 0.5);
             VisionCanvas.cursor.x = Math.round(e.clientX - canvasRect.left);
             VisionCanvas.cursor.y = Math.round(e.clientY - canvasRect.top);
         });
@@ -65,6 +70,14 @@ class VisionCanvas {
             l: (window.innerWidth >= window.innerHeight) ? window.innerWidth : window.innerHeight,
             s: (window.innerWidth <= window.innerHeight) ? window.innerWidth : window.innerHeight
         };
+
+        const colourList = [
+            "lightCoral",
+            "gold",
+            "springGreen",
+            "cyan",
+            "deepSkyBlue"
+        ];
 
         this.nodes = [];
         // for (let i = 0; i < randomWithRange(3, 7); i++) {
@@ -81,31 +94,37 @@ class VisionCanvas {
         this.nodes.push(new VisionNode(
             randomWithRange(this.canvas.width * 0.1, this.canvas.width * 0.3),
             randomWithRange(this.canvas.height * 0.1, this.canvas.height * 0.4),
-            randomWithRange(VisionCanvas.wSize.l * regularSizeMin, VisionCanvas.wSize.l * regularSizeMax)
+            randomWithRange(VisionCanvas.wSize.l * regularSizeMin, VisionCanvas.wSize.l * regularSizeMax),
+            colourList[Math.floor(Math.random() * colourList.length)]
         ));
         // Bottom left
         this.nodes.push(new VisionNode(
             randomWithRange(this.canvas.width * 0.1, this.canvas.width * 0.3),
             randomWithRange(this.canvas.height * 0.6, this.canvas.height * 0.9),
-            randomWithRange(VisionCanvas.wSize.l * regularSizeMin, VisionCanvas.wSize.l * regularSizeMax)
+            randomWithRange(VisionCanvas.wSize.l * regularSizeMin, VisionCanvas.wSize.l * regularSizeMax),
+            colourList[Math.floor(Math.random() * colourList.length)]
         ));
         // Mid right top
         this.nodes.push(new VisionNode(
             randomWithRange(this.canvas.width * 0.4, this.canvas.width * 0.7),
             randomWithRange(this.canvas.height * 0.2, this.canvas.height * 0.6),
-            randomWithRange(VisionCanvas.wSize.l * regularSizeMin, VisionCanvas.wSize.l * regularSizeMax)
+            randomWithRange(VisionCanvas.wSize.l * regularSizeMin, VisionCanvas.wSize.l * regularSizeMax),
+            colourList[Math.floor(Math.random() * colourList.length)]
         ));
         this.nodes.push(new VisionNode(
             randomWithRange(this.canvas.width * 0.6, this.canvas.width * 0.9),
             randomWithRange(this.canvas.height * 0.7, this.canvas.height * 0.9),
-            randomWithRange(VisionCanvas.wSize.l * 0.04, VisionCanvas.wSize.l * 0.12)
+            randomWithRange(VisionCanvas.wSize.l * 0.04, VisionCanvas.wSize.l * 0.12),
+            colourList[Math.floor(Math.random() * colourList.length)]
         ));
     }
 
     draw() {
         let ctx = this.ctx;
-        
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        VisionCanvas.draggedCursor.x = lerp(VisionCanvas.draggedCursor.x, VisionCanvas.cursor.x, 0.5);
+        VisionCanvas.draggedCursor.y = lerp(VisionCanvas.draggedCursor.y, VisionCanvas.cursor.y, 0.5);
 
         this.nodes.forEach(node => {
             node.draw(ctx);
@@ -123,16 +142,20 @@ class VisionNode {
     size;
     // /** @type {number} */
     // angleToCursor;
+    /** @type {string} */
+    colour;
 
     /**
      * @param {number} _x
      * @param {number} _y
      * @param {number} _size
+     * @param {string} _colour
      */
-    constructor(_x, _y, _size) {
+    constructor(_x, _y, _size, _colour) {
         this.x = _x;
         this.y = _y;
         this.size = _size;
+        this.colour = _colour;
         // this.angleToCursor = 0;
 
         // window.addEventListener("mousemove", e => {
@@ -143,9 +166,9 @@ class VisionNode {
     /** @param {CanvasRenderingContext2D} ctx */
     draw(ctx) {
 
-        const angleToCursor = Math.atan2(VisionCanvas.cursor.y - this.y, VisionCanvas.cursor.x - this.x);
+        const angleToCursor = Math.atan2(VisionCanvas.draggedCursor.y - this.y, VisionCanvas.draggedCursor.x - this.x);
         const distToCursor = dist(
-            VisionCanvas.cursor.x, VisionCanvas.cursor.y,
+            VisionCanvas.draggedCursor.x, VisionCanvas.draggedCursor.y,
             this.x, this.y);
         // const distThreshold = VisionCanvas.wSize.s * 0.2;
         // const backDist = (distToCursor > distThreshold) ? VisionCanvas.wSize.s * 0.2 : distThreshold * 0.2;
@@ -161,7 +184,7 @@ class VisionNode {
             y: this.y - backDist * Math.sin(angleToCursor)
         }
 
-        console.log(distToCursor);
+        // console.log(distToCursor);
 
         ctx.fillStyle = '#DDD';
         // ctx.fill();
@@ -170,7 +193,7 @@ class VisionNode {
 
         // ctx.fillStyle = 'indianred'
         // ctx.fill();
-        ctx.strokeStyle = "indianred";
+        ctx.strokeStyle = this.colour;
         ctx.lineWidth = VisionCanvas.wSize.s * 0.01;
         polygon(ctx, frontPos.x, frontPos.y, this.size/2 + distToCursor * 0.04, 3, Math.PI/2, false);
 
@@ -244,6 +267,18 @@ function polygon(_ctx, _x, _y, _radius, _sides, _rotation, _isFilled) {
 function dist(x1, y1, x2, y2) {
     return Math.sqrt( (x1 - x2) ** 2 + (y1 - y2) ** 2);
 }
+
+/**
+ * 
+ * @param {number} start 
+ * @param {number} end 
+ * @param {number} amt 
+ * @returns 
+ */
+ function lerp (start, end, amt){
+    return (1-amt)*start+amt*end
+}
+
 
 /**
  * 
