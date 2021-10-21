@@ -67,15 +67,39 @@ class VisionCanvas {
         };
 
         this.nodes = [];
-        for (let i = 0; i < randomWithRange(3, 7); i++) {
-            // this.nodes.push(new VisionNode(this.canvas.width * 0.5, this.canvas.height * 0.5, VisionCanvas.wSize.l * 0.1));
-            this.nodes.push(new VisionNode(
-                randomWithRange(this.canvas.width * 0.2, this.canvas.width * 0.8),
-                randomWithRange(this.canvas.height * 0.2, this.canvas.height * 0.8),
-                VisionCanvas.wSize.l * 0.1
-            ));
-        }
-        console.log(this.nodes);
+        // for (let i = 0; i < randomWithRange(3, 7); i++) {
+        //     // this.nodes.push(new VisionNode(this.canvas.width * 0.5, this.canvas.height * 0.5, VisionCanvas.wSize.l * 0.1));
+        //     this.nodes.push(new VisionNode(
+        //         randomWithRange(this.canvas.width * 0.2, this.canvas.width * 0.8),
+        //         randomWithRange(this.canvas.height * 0.2, this.canvas.height * 0.8),
+        //         VisionCanvas.wSize.l * 0.1
+        //     ));
+        // }
+        // Top left
+        const regularSizeMin = 0.03;
+        const regularSizeMax = 0.1;
+        this.nodes.push(new VisionNode(
+            randomWithRange(this.canvas.width * 0.1, this.canvas.width * 0.3),
+            randomWithRange(this.canvas.height * 0.1, this.canvas.height * 0.4),
+            randomWithRange(VisionCanvas.wSize.l * regularSizeMin, VisionCanvas.wSize.l * regularSizeMax)
+        ));
+        // Bottom left
+        this.nodes.push(new VisionNode(
+            randomWithRange(this.canvas.width * 0.1, this.canvas.width * 0.3),
+            randomWithRange(this.canvas.height * 0.6, this.canvas.height * 0.9),
+            randomWithRange(VisionCanvas.wSize.l * regularSizeMin, VisionCanvas.wSize.l * regularSizeMax)
+        ));
+        // Mid right top
+        this.nodes.push(new VisionNode(
+            randomWithRange(this.canvas.width * 0.4, this.canvas.width * 0.7),
+            randomWithRange(this.canvas.height * 0.2, this.canvas.height * 0.6),
+            randomWithRange(VisionCanvas.wSize.l * regularSizeMin, VisionCanvas.wSize.l * regularSizeMax)
+        ));
+        this.nodes.push(new VisionNode(
+            randomWithRange(this.canvas.width * 0.6, this.canvas.width * 0.9),
+            randomWithRange(this.canvas.height * 0.7, this.canvas.height * 0.9),
+            randomWithRange(VisionCanvas.wSize.l * 0.04, VisionCanvas.wSize.l * 0.12)
+        ));
     }
 
     draw() {
@@ -126,8 +150,8 @@ class VisionNode {
         // const distThreshold = VisionCanvas.wSize.s * 0.2;
         // const backDist = (distToCursor > distThreshold) ? VisionCanvas.wSize.s * 0.2 : distThreshold * 0.2;
         // const frontDist = (distToCursor > distThreshold) ? VisionCanvas.wSize.s * 0.2 : distThreshold * 0.2;       
-        const backDist = distToCursor * 0.1;
-        const frontDist = distToCursor * 0.1;
+        const backDist = distToCursor * 0.15;
+        const frontDist = distToCursor * 0.3;
         const frontPos = {
             x: this.x + frontDist * Math.cos(angleToCursor),
             y: this.y + frontDist * Math.sin(angleToCursor)
@@ -142,18 +166,18 @@ class VisionNode {
         ctx.fillStyle = '#DDD';
         // ctx.fill();
         // ctx.lineWidth = 0;
-        polygon(ctx, backPos.x, backPos.y, this.size + distToCursor * 0.2, 3, Math.PI/2, true);
+        polygon(ctx, backPos.x, backPos.y, this.size + distToCursor * 0.08, 3, Math.PI/2, true);
 
         // ctx.fillStyle = 'indianred'
         // ctx.fill();
         ctx.strokeStyle = "indianred";
         ctx.lineWidth = VisionCanvas.wSize.s * 0.01;
-        polygon(ctx, frontPos.x, frontPos.y, this.size/2 + distToCursor * 0.2, 3, Math.PI/2, false);
+        polygon(ctx, frontPos.x, frontPos.y, this.size/2 + distToCursor * 0.04, 3, Math.PI/2, false);
 
-        ctx.fillStyle = '#000';
-        ctx.fillText(angleToCursor.toString(), this.x, this.y);
+        // ctx.fillStyle = '#000';
+        // ctx.fillText(angleToCursor.toString(), this.x, this.y);
 
-        ctx.fillRect(this.x, this.y, 10, 10);
+        // ctx.fillRect(this.x, this.y, 10, 10);
     }
 }
 
