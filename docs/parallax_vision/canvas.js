@@ -67,7 +67,15 @@ class VisionCanvas {
         };
 
         this.nodes = [];
-        this.nodes.push(new VisionNode(this.canvas.width * 0.5, this.canvas.height * 0.5, VisionCanvas.wSize.l * 0.1));
+        for (let i = 0; i < randomWithRange(3, 7); i++) {
+            // this.nodes.push(new VisionNode(this.canvas.width * 0.5, this.canvas.height * 0.5, VisionCanvas.wSize.l * 0.1));
+            this.nodes.push(new VisionNode(
+                randomWithRange(this.canvas.width * 0.2, this.canvas.width * 0.8),
+                randomWithRange(this.canvas.height * 0.2, this.canvas.height * 0.8),
+                VisionCanvas.wSize.l * 0.1
+            ));
+        }
+        console.log(this.nodes);
     }
 
     draw() {
@@ -89,8 +97,8 @@ class VisionNode {
     y;
     /** @type {number} */
     size;
-    /** @type {number} */
-    angleToCursor;
+    // /** @type {number} */
+    // angleToCursor;
 
     /**
      * @param {number} _x
@@ -101,30 +109,32 @@ class VisionNode {
         this.x = _x;
         this.y = _y;
         this.size = _size;
+        // this.angleToCursor = 0;
 
-        window.addEventListener("mousemove", e => {
-            this.angleToCursor = Math.atan2(VisionCanvas.cursor.y - this.y, VisionCanvas.cursor.x - this.x);
-        });
+        // window.addEventListener("mousemove", e => {
+        //     this.angleToCursor = Math.atan2(VisionCanvas.cursor.y - this.y, VisionCanvas.cursor.x - this.x);
+        // });
     }
 
     /** @param {CanvasRenderingContext2D} ctx */
     draw(ctx) {
 
+        const angleToCursor = Math.atan2(VisionCanvas.cursor.y - this.y, VisionCanvas.cursor.x - this.x);
         const distToCursor = dist(
             VisionCanvas.cursor.x, VisionCanvas.cursor.y,
             this.x, this.y);
-        const distThreshold = VisionCanvas.wSize.s * 0.2;
+        // const distThreshold = VisionCanvas.wSize.s * 0.2;
         // const backDist = (distToCursor > distThreshold) ? VisionCanvas.wSize.s * 0.2 : distThreshold * 0.2;
         // const frontDist = (distToCursor > distThreshold) ? VisionCanvas.wSize.s * 0.2 : distThreshold * 0.2;       
-        const backDist = distToCursor * 0.15;
-        const frontDist = distToCursor * 0.24;
+        const backDist = distToCursor * 0.1;
+        const frontDist = distToCursor * 0.1;
         const frontPos = {
-            x: this.x + frontDist * Math.cos(this.angleToCursor),
-            y: this.y + frontDist * Math.sin(this.angleToCursor)
+            x: this.x + frontDist * Math.cos(angleToCursor),
+            y: this.y + frontDist * Math.sin(angleToCursor)
         }        
         const backPos = {
-            x: this.x - backDist * Math.cos(this.angleToCursor),
-            y: this.y - backDist * Math.sin(this.angleToCursor)
+            x: this.x - backDist * Math.cos(angleToCursor),
+            y: this.y - backDist * Math.sin(angleToCursor)
         }
 
         console.log(distToCursor);
@@ -132,15 +142,18 @@ class VisionNode {
         ctx.fillStyle = '#DDD';
         // ctx.fill();
         // ctx.lineWidth = 0;
-        polygon(ctx, backPos.x, backPos.y, this.size, 3, Math.PI/2, true);
+        polygon(ctx, backPos.x, backPos.y, this.size + distToCursor * 0.2, 3, Math.PI/2, true);
 
-        ctx.fillStyle = 'indianred'
+        // ctx.fillStyle = 'indianred'
         // ctx.fill();
         ctx.strokeStyle = "indianred";
         ctx.lineWidth = VisionCanvas.wSize.s * 0.01;
-        polygon(ctx, frontPos.x, frontPos.y, this.size/2, 3, Math.PI/2, false);
+        polygon(ctx, frontPos.x, frontPos.y, this.size/2 + distToCursor * 0.2, 3, Math.PI/2, false);
 
-        // ctx.rect(VisionCanvas.cursor.x, VisionCanvas.cursor.y, 10, 10);
+        ctx.fillStyle = '#000';
+        ctx.fillText(angleToCursor.toString(), this.x, this.y);
+
+        ctx.fillRect(this.x, this.y, 10, 10);
     }
 }
 
@@ -206,4 +219,14 @@ function polygon(_ctx, _x, _y, _radius, _sides, _rotation, _isFilled) {
  */
 function dist(x1, y1, x2, y2) {
     return Math.sqrt( (x1 - x2) ** 2 + (y1 - y2) ** 2);
+}
+
+/**
+ * 
+ * @param {number} min 
+ * @param {number} max 
+ * @returns {number}
+ */
+ function randomWithRange(min, max) {
+    return Math.random() * (max - min) + min;
 }
