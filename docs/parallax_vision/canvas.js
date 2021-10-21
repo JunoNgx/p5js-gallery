@@ -60,8 +60,6 @@ class VisionCanvas {
         VisionCanvas.draggedCursor = {x: 0, y: 0};
         window.addEventListener("mousemove", (e) => {
             const canvasRect = this.canvas.getBoundingClientRect();
-            // lerp(VisionCanvas.cursor.x, Math.round(e.clientX - canvasRect.left), 0.5);
-            // lerp(VisionCanvas.cursor.y, Math.round(e.clientY - canvasRect.top), 0.5);
             VisionCanvas.cursor.x = Math.round(e.clientX - canvasRect.left);
             VisionCanvas.cursor.y = Math.round(e.clientY - canvasRect.top);
         });
@@ -80,14 +78,6 @@ class VisionCanvas {
         ];
 
         this.nodes = [];
-        // for (let i = 0; i < randomWithRange(3, 7); i++) {
-        //     // this.nodes.push(new VisionNode(this.canvas.width * 0.5, this.canvas.height * 0.5, VisionCanvas.wSize.l * 0.1));
-        //     this.nodes.push(new VisionNode(
-        //         randomWithRange(this.canvas.width * 0.2, this.canvas.width * 0.8),
-        //         randomWithRange(this.canvas.height * 0.2, this.canvas.height * 0.8),
-        //         VisionCanvas.wSize.l * 0.1
-        //     ));
-        // }
         // Top left
         const regularSizeMin = 0.03;
         const regularSizeMax = 0.1;
@@ -140,8 +130,6 @@ class VisionNode {
     y;
     /** @type {number} */
     size;
-    // /** @type {number} */
-    // angleToCursor;
     /** @type {string} */
     colour;
 
@@ -156,11 +144,6 @@ class VisionNode {
         this.y = _y;
         this.size = _size;
         this.colour = _colour;
-        // this.angleToCursor = 0;
-
-        // window.addEventListener("mousemove", e => {
-        //     this.angleToCursor = Math.atan2(VisionCanvas.cursor.y - this.y, VisionCanvas.cursor.x - this.x);
-        // });
     }
 
     /** @param {CanvasRenderingContext2D} ctx */
@@ -170,9 +153,6 @@ class VisionNode {
         const distToCursor = dist(
             VisionCanvas.draggedCursor.x, VisionCanvas.draggedCursor.y,
             this.x, this.y);
-        // const distThreshold = VisionCanvas.wSize.s * 0.2;
-        // const backDist = (distToCursor > distThreshold) ? VisionCanvas.wSize.s * 0.2 : distThreshold * 0.2;
-        // const frontDist = (distToCursor > distThreshold) ? VisionCanvas.wSize.s * 0.2 : distThreshold * 0.2;       
         const backDist = distToCursor * 0.15;
         const frontDist = distToCursor * 0.3;
         const frontPos = {
@@ -184,23 +164,12 @@ class VisionNode {
             y: this.y - backDist * Math.sin(angleToCursor)
         }
 
-        // console.log(distToCursor);
-
         ctx.fillStyle = '#DDD';
-        // ctx.fill();
-        // ctx.lineWidth = 0;
         polygon(ctx, backPos.x, backPos.y, this.size + distToCursor * 0.08, 3, Math.PI/2, true);
 
-        // ctx.fillStyle = 'indianred'
-        // ctx.fill();
         ctx.strokeStyle = this.colour;
         ctx.lineWidth = VisionCanvas.wSize.s * 0.01;
         polygon(ctx, frontPos.x, frontPos.y, this.size/2 + distToCursor * 0.04, 3, Math.PI/2, false);
-
-        // ctx.fillStyle = '#000';
-        // ctx.fillText(angleToCursor.toString(), this.x, this.y);
-
-        // ctx.fillRect(this.x, this.y, 10, 10);
     }
 }
 
