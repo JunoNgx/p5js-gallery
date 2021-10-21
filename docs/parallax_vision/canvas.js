@@ -37,7 +37,7 @@ class VisionCanvas {
      * l: number
      * }}
      * */
-    wSize;
+    static wSize;
 
     /** @param {string} canvasId */
     constructor(canvasId) {
@@ -61,13 +61,13 @@ class VisionCanvas {
             VisionCanvas.cursor.y = Math.round(e.clientY - canvasRect.top);
         });
 
-        this.wSize = {
+        VisionCanvas.wSize = {
             l: (window.innerWidth >= window.innerHeight) ? window.innerWidth : window.innerHeight,
             s: (window.innerWidth <= window.innerHeight) ? window.innerWidth : window.innerHeight
         };
 
         this.nodes = [];
-        this.nodes.push(new VisionNode(100, 200, 0.2));
+        this.nodes.push(new VisionNode(700, 300, VisionCanvas.wSize.l * 0.1));
     }
 
     draw() {
@@ -104,22 +104,38 @@ class VisionNode {
     constructor(_x, _y, _size) {
         this.x = _x;
         this.y = _y;
-        this.size = window.innerWidth * _size;
+        this.size = _size;
 
         window.addEventListener("mousemove", e => {
-            this.angleToCursor = Math.atan2(VisionCanvas.cursor.y - this.y, VisionCanvas.cursor.x - this.x);
+            this.angleToCursor = Math.atan2(VisionCanvas.cursor.x - this.x, VisionCanvas.cursor.y - this.y);
         });
     }
 
     /** @param {CanvasRenderingContext2D} ctx */
     draw(ctx) {
+
+        const backDist =  this.size * 0.1;
+        const frontDist = this.size * 0.2;
+
+        const frontPos = {
+            x: this.x + frontDist * Math.sin(this.angleToCursor),
+            y: this.y + frontDist * Math.cos(this.angleToCursor)
+        }        
+        
+        const backPos = {
+            x: this.x - backDist * Math.sin(this.angleToCursor),
+            y: this.y - backDist * Math.cos(this.angleToCursor)
+        }
+
         ctx.fillStyle = '#888';
         ctx.fill();
-        polygon(ctx, this.x, this.y, this.size, 3, Math.PI/2, false);
+        polygon(ctx, backPos.x, backPos.y, this.size, 3, Math.PI/2, false);
 
         ctx.fillStyle = 'indianred'
         // ctx.fill();
-        polygon(ctx, this.x, this.y, this.size/2, 3, Math.PI/2, false);
+        polygon(ctx, frontPos.x, frontPos.y, this.size/2, 3, Math.PI/2, false);
+
+        ctx.rect(VisionCanvas.cursor.x, VisionCanvas.cursor.y, 10, 10);
     }
 }
 
