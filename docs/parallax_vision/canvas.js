@@ -107,25 +107,31 @@ class VisionNode {
         this.size = _size;
 
         window.addEventListener("mousemove", e => {
-            this.angleToCursor = Math.atan2(VisionCanvas.cursor.x - this.x, VisionCanvas.cursor.y - this.y);
+            this.angleToCursor = Math.atan2(VisionCanvas.cursor.y - this.y, VisionCanvas.cursor.x - this.x);
         });
     }
 
     /** @param {CanvasRenderingContext2D} ctx */
     draw(ctx) {
 
-        const backDist =  this.size * 0.1;
-        const frontDist = this.size * 0.2;
-
+        const distToCursor = dist(
+            VisionCanvas.cursor.x, VisionCanvas.cursor.y,
+            this.x, this.y);
+        const distThreshold = VisionCanvas.wSize.s * 0.2;
+        // const backDist = (distToCursor > distThreshold) ? VisionCanvas.wSize.s * 0.2 : distThreshold * 0.2;
+        // const frontDist = (distToCursor > distThreshold) ? VisionCanvas.wSize.s * 0.2 : distThreshold * 0.2;       
+        const backDist = distToCursor * 0.2;
+        const frontDist = distToCursor * 0.3;
         const frontPos = {
-            x: this.x + frontDist * Math.sin(this.angleToCursor),
-            y: this.y + frontDist * Math.cos(this.angleToCursor)
+            x: this.x + frontDist * Math.cos(this.angleToCursor),
+            y: this.y + frontDist * Math.sin(this.angleToCursor)
         }        
-        
         const backPos = {
-            x: this.x - backDist * Math.sin(this.angleToCursor),
-            y: this.y - backDist * Math.cos(this.angleToCursor)
+            x: this.x - backDist * Math.cos(this.angleToCursor),
+            y: this.y - backDist * Math.sin(this.angleToCursor)
         }
+
+        console.log(distToCursor);
 
         ctx.fillStyle = '#888';
         ctx.fill();
@@ -135,7 +141,7 @@ class VisionNode {
         // ctx.fill();
         polygon(ctx, frontPos.x, frontPos.y, this.size/2, 3, Math.PI/2, false);
 
-        ctx.rect(VisionCanvas.cursor.x, VisionCanvas.cursor.y, 10, 10);
+        // ctx.rect(VisionCanvas.cursor.x, VisionCanvas.cursor.y, 10, 10);
     }
 }
 
@@ -200,5 +206,5 @@ function polygon(_ctx, _x, _y, _radius, _sides, _rotation, _isFilled) {
  * @param {number} y2 
  */
 function dist(x1, y1, x2, y2) {
-    return Math.sqrt( (x1 - x2) ** 2 - (y1 - y2) ** 2);
+    return Math.sqrt( (x1 - x2) ** 2 + (y1 - y2) ** 2);
 }
