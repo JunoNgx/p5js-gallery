@@ -67,17 +67,13 @@ class VisionCanvas {
         };
 
         this.nodes = [];
-        this.nodes.push(new VisionNode(700, 300, VisionCanvas.wSize.l * 0.1));
+        this.nodes.push(new VisionNode(this.canvas.width * 0.5, this.canvas.height * 0.5, VisionCanvas.wSize.l * 0.1));
     }
 
     draw() {
         let ctx = this.ctx;
         
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        
-        // ctx.rect(10, 20, 30, 40);
-        // ctx.fillStyle = 'indianred';
-        // ctx.fill();
 
         this.nodes.forEach(node => {
             node.draw(ctx);
@@ -120,8 +116,8 @@ class VisionNode {
         const distThreshold = VisionCanvas.wSize.s * 0.2;
         // const backDist = (distToCursor > distThreshold) ? VisionCanvas.wSize.s * 0.2 : distThreshold * 0.2;
         // const frontDist = (distToCursor > distThreshold) ? VisionCanvas.wSize.s * 0.2 : distThreshold * 0.2;       
-        const backDist = distToCursor * 0.2;
-        const frontDist = distToCursor * 0.3;
+        const backDist = distToCursor * 0.15;
+        const frontDist = distToCursor * 0.24;
         const frontPos = {
             x: this.x + frontDist * Math.cos(this.angleToCursor),
             y: this.y + frontDist * Math.sin(this.angleToCursor)
@@ -133,12 +129,15 @@ class VisionNode {
 
         console.log(distToCursor);
 
-        ctx.fillStyle = '#888';
-        ctx.fill();
-        polygon(ctx, backPos.x, backPos.y, this.size, 3, Math.PI/2, false);
+        ctx.fillStyle = '#DDD';
+        // ctx.fill();
+        // ctx.lineWidth = 0;
+        polygon(ctx, backPos.x, backPos.y, this.size, 3, Math.PI/2, true);
 
         ctx.fillStyle = 'indianred'
         // ctx.fill();
+        ctx.strokeStyle = "indianred";
+        ctx.lineWidth = VisionCanvas.wSize.s * 0.01;
         polygon(ctx, frontPos.x, frontPos.y, this.size/2, 3, Math.PI/2, false);
 
         // ctx.rect(VisionCanvas.cursor.x, VisionCanvas.cursor.y, 10, 10);
