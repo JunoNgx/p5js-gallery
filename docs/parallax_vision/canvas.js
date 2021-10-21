@@ -21,14 +21,14 @@ function loop() {
  * }} Vector
  */
 
-class CreativeCanvas {
+class VisionCanvas {
     
     /** @type {HTMLCanvasElement} */
     canvas;
     /** @type {CanvasRenderingContext2D} */
     ctx;
     /** @type {Vector} */
-    cursor;
+    static cursor;
     /** @type {VisionNode []} */
     nodes;
     /**
@@ -54,10 +54,11 @@ class CreativeCanvas {
             this.canvas.style.height = this.canvas.height + 'px';
         });
 
+        VisionCanvas.cursor = {x: 0, y: 0};
         window.addEventListener("mousemove", (e) => {
             const canvasRect = this.canvas.getBoundingClientRect();
-            this.cursor.x = Math.round(e.clientX - canvasRect.left);
-            this.cursor.y = Math.round(e.clientY - canvasRect.top);
+            VisionCanvas.cursor.x = Math.round(e.clientX - canvasRect.left);
+            VisionCanvas.cursor.y = Math.round(e.clientY - canvasRect.top);
         });
 
         this.wSize = {
@@ -66,7 +67,7 @@ class CreativeCanvas {
         };
 
         this.nodes = [];
-        this.nodes.push(new VisionNode(100, 200, 0.5));
+        this.nodes.push(new VisionNode(100, 200, 0.2));
     }
 
     draw() {
@@ -92,6 +93,8 @@ class VisionNode {
     y;
     /** @type {number} */
     size;
+    /** @type {number} */
+    angleToCursor;
 
     /**
      * @param {number} _x
@@ -101,29 +104,39 @@ class VisionNode {
     constructor(_x, _y, _size) {
         this.x = _x;
         this.y = _y;
-        this.size = window.innerWidth
+        this.size = window.innerWidth * _size;
+
+        window.addEventListener("mousemove", e => {
+            this.angleToCursor = Math.atan2(VisionCanvas.cursor.y - this.y, VisionCanvas.cursor.x - this.x);
+        });
     }
 
     /** @param {CanvasRenderingContext2D} ctx */
     draw(ctx) {
+        ctx.fillStyle = '#888';
+        ctx.fill();
+        polygon(ctx, this.x, this.y, this.size, 3, Math.PI/2, false);
 
+        ctx.fillStyle = 'indianred'
+        // ctx.fill();
+        polygon(ctx, this.x, this.y, this.size/2, 3, Math.PI/2, false);
     }
 }
 
 
 window.addEventListener('DOMContentLoaded', () => setup());
 
-/** @type { CreativeCanvas } */
-let creativeCanvas;
+/** @type { VisionCanvas } */
+let visionCanvas;
 
 function setup() {
-    creativeCanvas = new CreativeCanvas("backgroundCanvas");
+    visionCanvas = new VisionCanvas("backgroundCanvas");
 
     window.requestAnimationFrame(loop);
 }
 
 function draw() {
-    creativeCanvas.draw();
+    visionCanvas.draw();
 }
 
 /**
@@ -161,4 +174,15 @@ function polygon(_ctx, _x, _y, _radius, _sides, _rotation, _isFilled) {
         _ctx.closePath();
         _ctx.stroke();
     }
+}
+
+/**
+ * Find distance between two points
+ * @param {number} x1 
+ * @param {number} y1 
+ * @param {number} x2 
+ * @param {number} y2 
+ */
+function dist(x1, y1, x2, y2) {
+    return Math.sqrt( (x1 - x2) ** 2 - (y1 - y2) ** 2);
 }
