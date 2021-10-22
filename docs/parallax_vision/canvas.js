@@ -83,8 +83,10 @@ class VisionCanvas {
 
         this.nodes = [];
         // Top left
-        const regularSizeMin = 0.03;
-        const regularSizeMax = 0.1;
+        const regularSizeMin = 0.02;
+        const regularSizeMax = 0.05;
+        const largeSizeMin = 0.05;
+        const largeSizeMax = 0.1;
         this.nodes.push(new VisionNode(
             randomWithRange(0.1, 0.3),
             randomWithRange(0.1, 0.4),
@@ -108,7 +110,7 @@ class VisionCanvas {
         this.nodes.push(new VisionNode(
             randomWithRange(0.6, 0.9),
             randomWithRange(0.7, 0.9),
-            randomWithRange(0.04, 0.12),
+            randomWithRange(largeSizeMin, largeSizeMax),
             colourList[Math.floor(Math.random() * colourList.length)]
         ));
     }
@@ -177,7 +179,7 @@ class VisionNode {
         ctx.fillStyle = '#DDD';
         polygon(
             ctx, backPos.x, backPos.y,
-            (window.innerWidth * this.sizeRate) + distToCursor * 0.1,
+            (window.innerWidth * this.sizeRate) + distToCursor * 0.15,
             3, Math.PI/2, true
         );
     }
@@ -201,7 +203,7 @@ class VisionNode {
         }        
 
         ctx.strokeStyle = this.colour;
-        ctx.lineWidth = window.innerWidth * 0.002 + distToCursor * 0.02;
+        ctx.lineWidth = window.innerWidth * 0.002 + distToCursor * 0.04;
         polygon(ctx, frontPos.x, frontPos.y,
             (window.innerWidth * this.sizeRate) * 0.5 + distToCursor * 0.1,
             3, Math.PI/2, false);
