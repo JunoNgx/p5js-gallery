@@ -177,7 +177,7 @@ class VisionNode {
         ctx.fillStyle = '#DDD';
         polygon(
             ctx, backPos.x, backPos.y,
-            (window.innerWidth * this.sizeRate) + distToCursor * 0.08,
+            (window.innerWidth * this.sizeRate) + distToCursor * 0.1,
             3, Math.PI/2, true
         );
     }
@@ -201,9 +201,9 @@ class VisionNode {
         }        
 
         ctx.strokeStyle = this.colour;
-        ctx.lineWidth = window.innerWidth * 0.005 + distToCursor * 0.01;
+        ctx.lineWidth = window.innerWidth * 0.002 + distToCursor * 0.02;
         polygon(ctx, frontPos.x, frontPos.y,
-            (window.innerWidth * this.sizeRate) * 0.5 + distToCursor * 0.04,
+            (window.innerWidth * this.sizeRate) * 0.5 + distToCursor * 0.1,
             3, Math.PI/2, false);
     }
 }
