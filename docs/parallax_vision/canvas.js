@@ -21,7 +21,7 @@ function loop() {
  * }} Vector
  */
 
-class VisionCanvas {
+ class VisionCanvas {
     
     /** @type {HTMLCanvasElement} */
     canvas;
@@ -33,13 +33,6 @@ class VisionCanvas {
     static draggedCursor;
     /** @type {VisionNode []} */
     nodes;
-    // /**
-    //  * @type {{
-    //  * s: number
-    //  * l: number
-    //  * }}
-    //  * */
-    // static wSize;
 
     /** @param {string} canvasId */
     constructor(canvasId) {
@@ -54,16 +47,7 @@ class VisionCanvas {
             this.canvas.height = window.innerHeight;
             this.canvas.style.width = this.canvas.width + 'px';
             this.canvas.style.height = this.canvas.height + 'px';
-            // VisionCanvas.wSize = {
-            //     l: (window.innerWidth >= window.innerHeight) ? window.innerWidth : window.innerHeight,
-            //     s: (window.innerWidth <= window.innerHeight) ? window.innerWidth : window.innerHeight
-            // };
         });
-
-        // VisionCanvas.wSize = {
-        //     l: (window.innerWidth >= window.innerHeight) ? window.innerWidth : window.innerHeight,
-        //     s: (window.innerWidth <= window.innerHeight) ? window.innerWidth : window.innerHeight
-        // };
 
         VisionCanvas.cursor = {x: 0, y: 0};
         VisionCanvas.draggedCursor = {x: 0, y: 0};
@@ -72,46 +56,52 @@ class VisionCanvas {
             VisionCanvas.cursor.x = Math.round(e.clientX - canvasRect.left);
             VisionCanvas.cursor.y = Math.round(e.clientY - canvasRect.top);
         });
-
-        const colourList = [
-            "lightCoral",
-            "gold",
-            "springGreen",
-            "cyan",
-            "deepSkyBlue"
-        ];
-
-        this.nodes = [];
-        // Top left
+        
+        
         const regularSizeMin = 0.02;
         const regularSizeMax = 0.05;
-        const largeSizeMin = 0.05;
-        const largeSizeMax = 0.1;
+        const largeSizeMin = 0.04;
+        const largeSizeMax = 0.07;
+        
+        // const nodeColour = "#898";
+        let colourList = [
+            '#d968b1',
+            '#99e0af',
+            '#3ba1cc',
+            '#ffe08a'
+        ]
+        shuffle(colourList);
+        let sideList = [3, 4, 5, 32];
+        shuffle(sideList);
+        
+        this.nodes = [];
         this.nodes.push(new VisionNode(
-            randomWithRange(0.1, 0.3),
+            randomWithRange(0.1, 0.2),
+            randomWithRange(0.6, 0.8),
+            randomWithRange(regularSizeMin, regularSizeMax),
+            sideList[0],
+            colourList[0]
+        ));
+        this.nodes.push(new VisionNode(
+            randomWithRange(0.3, 0.4),
+            randomWithRange(0.2, 0.4),
+            randomWithRange(regularSizeMin, regularSizeMax),
+            sideList[1],
+            colourList[1]
+        ));
+        this.nodes.push(new VisionNode(
+            randomWithRange(0.6, 0.7),
             randomWithRange(0.1, 0.4),
             randomWithRange(regularSizeMin, regularSizeMax),
-            colourList[Math.floor(Math.random() * colourList.length)]
-        ));
-        // Bottom left
-        this.nodes.push(new VisionNode(
-            randomWithRange(0.1, 0.3),
-            randomWithRange(0.6, 0.9),
-            randomWithRange(regularSizeMin, regularSizeMax),
-            colourList[Math.floor(Math.random() * colourList.length)]
-        ));
-        // Mid right top
-        this.nodes.push(new VisionNode(
-            randomWithRange(0.4, 0.7),
-            randomWithRange(0.2, 0.6),
-            randomWithRange(regularSizeMin, regularSizeMax),
-            colourList[Math.floor(Math.random() * colourList.length)]
+            sideList[2],
+            colourList[2]
         ));
         this.nodes.push(new VisionNode(
             randomWithRange(0.6, 0.9),
-            randomWithRange(0.7, 0.9),
+            randomWithRange(0.6, 0.9),
             randomWithRange(largeSizeMin, largeSizeMax),
-            colourList[Math.floor(Math.random() * colourList.length)]
+            sideList[3],
+            colourList[3]
         ));
     }
 
@@ -142,6 +132,8 @@ class VisionNode {
     y;
     /** @type {number} */
     sizeRate;
+    /** @type {number} */
+    sideCount;
     /** @type {string} */
     colour;
 
@@ -149,12 +141,14 @@ class VisionNode {
      * @param {number} _x
      * @param {number} _y
      * @param {number} _sizeRate
+     * @param {number} _sideCount
      * @param {string} _colour
      */
-    constructor(_x, _y, _sizeRate, _colour) {
+    constructor(_x, _y, _sizeRate, _sideCount, _colour) {
         this.x = _x;
         this.y = _y;
         this.sizeRate = _sizeRate;
+        this.sideCount = _sideCount;
         this.colour = _colour;
     }
 
@@ -176,11 +170,14 @@ class VisionNode {
             y: this.y * window.innerHeight - backDist * Math.sin(angleToCursor)
         }
 
-        ctx.fillStyle = '#DDD';
+        ctx.fillStyle = '#ccc';
         polygon(
-            ctx, backPos.x, backPos.y,
+            ctx,
+            backPos.x, backPos.y,
             (window.innerWidth * this.sizeRate) + distToCursor * 0.15,
-            3, Math.PI/2, true
+            this.sideCount,
+            (this.sideCount === 3) ? Math.PI/2 : Math.PI/4,
+            true
         );
     }
 
@@ -204,9 +201,14 @@ class VisionNode {
 
         ctx.strokeStyle = this.colour;
         ctx.lineWidth = window.innerWidth * 0.002 + distToCursor * 0.04;
-        polygon(ctx, frontPos.x, frontPos.y,
+        polygon(
+            ctx,
+            frontPos.x,
+            frontPos.y,
             (window.innerWidth * this.sizeRate) * 0.5 + distToCursor * 0.1,
-            3, Math.PI/2, false);
+            this.sideCount,
+            (this.sideCount === 3) ? Math.PI/2 : Math.PI/4,
+            false);
     }
 }
 
@@ -294,4 +296,24 @@ function dist(x1, y1, x2, y2) {
  */
  function randomWithRange(min, max) {
     return Math.random() * (max - min) + min;
+}
+
+/**
+ * 
+ * @param {any[]} array 
+ * @returns {any[]}
+ */
+function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+  
+    while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // Swapping values
+        [array[currentIndex], array[randomIndex]] =
+            [array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
 }
