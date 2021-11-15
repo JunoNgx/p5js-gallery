@@ -5,6 +5,10 @@ body {
   color: #ccc;
   max-width: 1280px;
   margin: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -o-hyphens: auto;
   hyphens: auto;
   line-height: 1.5;
   padding: 0;
@@ -22,15 +26,13 @@ body a:hover {
 .banner {
   background-color: #CD5C5C;
   color: #eee;
-  height: 20rem;
 }
 .banner__text {
   text-align: center;
   margin: auto;
-  padding: 2rem;
+  padding: 4rem 1rem;
 }
 .banner__text__header {
-  padding-top: 1rem;
   font-size: 3rem;
 }
 
